@@ -246,13 +246,17 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="#" class="nav-link">
+                <a href="#" class="nav-link" onclick="document.getElementById('logout').submit()">
                   <i class="fas fa-sign-out-alt nav-icon"></i>
                   <p>Cerrar Sesión</p>
                 </a>
               </li>      
             </ul>
           </li>
+
+          <form id="logout" action="{{ route('logout') }}" method="POST" style="display: none">
+            @csrf
+          </form>
 
 
 

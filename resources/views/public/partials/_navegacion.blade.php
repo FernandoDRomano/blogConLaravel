@@ -10,7 +10,19 @@
                 <li><a href="{{ route('pages.about') }}" class="text-uppercase">About</a></li>
                 <li><a href="{{ route('pages.archive') }}" class="text-uppercase">Archive</a></li>
                 <li><a href="{{ route('pages.contact') }}" class="text-uppercase">Contact</a></li>
+                @auth    
+                    <li>
+                        <a href="#" onclick="document.getElementById('logout').submit()" class="text-uppercase">Cerrar Sesión</a>
+                    </li>
+                @else
+                    <li><a href="{{ route('login') }}" class="text-uppercase">Ingresar</a></li>
+                    <li><a href="{{ route('register') }}" class="text-uppercase">Registrarse</a></li>
+                @endauth
             </ul>
         </nav>
     </div>
 </header>
+
+<form id="logout" action="{{ route('logout') }}" method="POST">
+    @csrf 
+</form>
