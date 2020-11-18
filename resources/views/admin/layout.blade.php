@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   
   <title> @yield('title', 'Administración') </title>
 
@@ -12,6 +13,10 @@
   <link rel="stylesheet" href="/admin/plugins/fontawesome-free/css/all.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="/admin/css/adminlte.min.css">
+
+  {{-- STYLES ADICIONALES --}}
+  @stack('links')
+
 </head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
@@ -25,7 +30,7 @@
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
-    @include('admin.partials._contentHeader')
+    @yield('contentHeader')
     <!-- /.content-header -->
 
     <!-- Main content -->
@@ -55,5 +60,9 @@
 <script src="/admin/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- AdminLTE App -->
 <script src="/admin/js/adminlte.min.js"></script>
+
+{{-- SCRIPTS ADICIONALES --}}
+@stack('script')
+
 </body>
 </html>
