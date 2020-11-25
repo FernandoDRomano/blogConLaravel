@@ -1,7 +1,7 @@
   <!-- Main Sidebar Container -->
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="index3.html" class="brand-link">
+    <a href="{{ route('admin.dashboard') }}" class="brand-link">
       <img src="/admin/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
       <span class="brand-text font-weight-light">Administración</span>
     </a>
@@ -27,7 +27,16 @@
             <a href="{{ route('admin.dashboard') }}" class="nav-link">
               <i class="nav-icon fas fa-home"></i>
               <p>
-                Inicio
+                Dashboard
+              </p>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a href="{{ route('home') }}" class="nav-link"  target="_blank">
+              <i class="nav-icon fas fa-globe"></i>
+              <p>
+                Sitio Web del Blog
               </p>
             </a>
           </li>
@@ -73,7 +82,7 @@
             <ul class="nav nav-treeview ml-1 ml-lg-2" style="display: none;">
               <li class="nav-item">
                 <a href="#" class="nav-link">
-                  <i class="fas fa-tags  nav-icon"></i>
+                  <i class="fas fa-tags nav-icon"></i>
                   <p>
                     Categorías
                     <i class="right fas fa-angle-left"></i>
@@ -82,16 +91,10 @@
                 <ul class="nav nav-treeview ml-1 ml-lg-2" style="display: none;">
                   <li class="nav-item">
                     <a href="{{ route('admin.categories.index') }}" class="nav-link">
-                      <i class="fas fa-eye nav-icon"></i>
-                      <p>Ver todas las categorías</p>
+                      <i class="fas fa-bars nav-icon"></i>
+                      <p>Administrar categorías</p>
                     </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="#" class="nav-link">
-                      <i class="fas fa-plus-circle nav-icon"></i>
-                      <p>Crear una categoría  </p>
-                    </a>
-                  </li>                           
+                  </li>                         
                 </ul>
               </li>
             </ul>

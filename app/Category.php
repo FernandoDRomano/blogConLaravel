@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Post;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
@@ -26,5 +27,9 @@ class Category extends Model
     public function getRouteKeyName()
     {
         return 'url';
+    }
+
+    public function generateUrl(){
+        $this->url = Str::slug($this->name);
     }
 }
