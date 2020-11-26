@@ -111,17 +111,11 @@
                 </a>
                 <ul class="nav nav-treeview ml-1 ml-lg-2" style="display: none;">
                   <li class="nav-item">
-                    <a href="#" class="nav-link">
-                      <i class="fas fa-eye nav-icon"></i>
-                      <p>Ver todas las etiquetas</p>
+                    <a href="{{ route('admin.tags.index') }}" class="nav-link">
+                      <i class="fas fa-bars nav-icon"></i>
+                      <p>Administrar etiquetas</p>
                     </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="#" class="nav-link">
-                      <i class="fas fa-plus-circle nav-icon"></i>
-                      <p>Crear una etiqueta</p>
-                    </a>
-                  </li>                     
+                  </li>                    
                 </ul>
               </li>
             </ul>

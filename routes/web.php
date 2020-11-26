@@ -17,6 +17,12 @@ Route::group(
         Route::get('categories/get/{category}', 'CategoryController@getCategory')->name('admin.categories.get');
         Route::resource('categories', 'CategoryController', ['as' => 'admin'])
                 ->only(['index', 'store', 'update', 'destroy']);
+
+        /* TAGS */
+        Route::get('tags/all', 'TagController@all')->name('admin.tags.all');
+        Route::get('tags/get/{tag}', 'TagController@getTag')->name('admin.tags.get');
+        Route::resource('tags', 'TagController', ['as' => 'admin'])
+                ->only(['index', 'store', 'update', 'destroy']);
 });
 
 
