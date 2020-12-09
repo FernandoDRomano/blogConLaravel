@@ -15,7 +15,7 @@ class CreateImagesTable extends Migration
     {
         Schema::create('images', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('imagen');
+            $table->string('url');
 
             /* LLAVE FORANEA */
             $table->unsignedBigInteger('post_id');

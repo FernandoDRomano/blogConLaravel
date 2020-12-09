@@ -15,13 +15,13 @@ class CreatePostsTable extends Migration
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('title');
+            $table->string('title', 255)->unique();
             $table->mediumText('extract')->nullable();
             $table->text('body')->nullable();
             $table->mediumText('iframe')->nullable();
             $table->date('published_at')->nullable();
             $table->boolean('approved')->default(false);
-            $table->string('url')->unique();
+            $table->string('url')->unique()->nullable();
             /* LLAVES FORANEAS */
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

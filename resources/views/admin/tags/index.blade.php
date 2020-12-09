@@ -241,6 +241,7 @@
 
         async function getTagDelete(e) {
             e.preventDefault();
+            console.log(e);
             try {
                 const tag = await getTag(e);
                 

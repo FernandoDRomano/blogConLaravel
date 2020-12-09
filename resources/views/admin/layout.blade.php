@@ -36,7 +36,7 @@
     <!-- Main content -->
     <div class="content">
       <div class="container-fluid">
-        
+        @include('admin.partials._session')
         {{-- AQUI VA EL CONTENIDO DE LA PÁGINA --}}
         @yield('content')
         

@@ -41,8 +41,10 @@ header nav li a:hover{
 	position: absolute;
     right: -11px;
     top: 30px;
-    text-transform: capitalize;
+	text-transform: capitalize;
+	font-size: inherit;
 }
+
 .post figure{
 	margin:0;
 }
@@ -175,8 +177,12 @@ a.btn-bar{
 	box-shadow: 0px 0px 10px rgba(0,0,0,0.3);
 	margin-bottom: 50px;
 	position: relative;
-	padding: 65px 100px;
+	padding: 50px;
+	margin-left: 2rem;
+	margin-right: 2rem; 
+	border-radius: .8rem;
 }
+
 .page p, .page cite{
 	line-height: 1.6;
 }
@@ -267,7 +273,79 @@ a.btn-bar{
           right: 7px;
           
       }
-      
-      
+	  
+.img-responsive {
+	width: 100%;
+	height: auto;
+	display: block;
+}
+
+.margin-negative{
+	margin-bottom: -5rem;
+}
 
 
+.carousel-inner{
+	height: 40rem;
+}
+
+.carousel-item, .carousel-item img{
+	height: 100%;
+}
+
+.tag{
+	background-color: #0dc2f0;
+    padding: .5rem 1rem;
+    border-radius: 1rem;
+}
+
+.enlace-tag{
+	color: white;
+    font-size: .8rem!important;
+    text-decoration: none;
+}
+
+.grid-container{
+	display: grid;
+    grid-template-columns: 1fr 1fr;
+	grid-template-rows: 1fr;
+	justify-content: stretch; 
+}
+
+.grid-container .item{
+	overflow: hidden;
+	position: relative;
+}
+
+.grid-container img{
+	width: 100%;
+	height: 100%;
+}
+
+.text-font{
+	color: white;
+	background-color: rgba(0,0,0,.6);
+    font-size: 7rem;
+    position: absolute;
+    top: 0;
+    margin: 0;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 20;
+}
+
+.disabled-navegation{
+	display: block;
+    background: rgb(165, 162, 162);
+    box-shadow: 0 0 10px rgba(0,0,0,.4);
+    text-decoration: none;
+    color: white;
+    padding: 10px 15px;
+}
+
+.text-principal{
+	color: #1abc9c;
+}

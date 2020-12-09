@@ -33,7 +33,7 @@
           </li>
 
           <li class="nav-item">
-            <a href="{{ route('home') }}" class="nav-link"  target="_blank">
+            <a href="{{ route('pages.blog') }}" class="nav-link"  target="_blank">
               <i class="nav-icon fas fa-globe"></i>
               <p>
                 Sitio Web del Blog
@@ -63,15 +63,9 @@
                 </a>
                 <ul class="nav nav-treeview ml-1 ml-lg-2" style="display: none;">
                   <li class="nav-item">
-                    <a href="#" class="nav-link">
-                      <i class="fas fa-eye nav-icon"></i>
-                      <p>Ver todos los posts</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="#" class="nav-link">
-                      <i class="fas fa-plus-circle nav-icon"></i>
-                      <p>Crear un post</p>
+                    <a href="{{ route('admin.posts.index') }}" class="nav-link">
+                      <i class="fas fa-bars nav-icon"></i>
+                      <p>Administrar posts</p>
                     </a>
                   </li>
                 </ul>
