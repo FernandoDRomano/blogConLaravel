@@ -39,7 +39,7 @@ class LoginController extends Controller
     }
 
     public function authenticated($request , $user){
-        if($user->role->name === 'Subscriber'){
+        if($user->hasRole('Subscriber')){
             return redirect()->route('pages.blog') ;
         }else{
             return redirect()->route('admin.dashboard') ;

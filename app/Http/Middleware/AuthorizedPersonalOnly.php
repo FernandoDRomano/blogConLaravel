@@ -15,7 +15,8 @@ class AuthorizedPersonalOnly
      */
     public function handle($request, Closure $next)
     {
-        if (auth()->check() && auth()->user()->role->name !== "Subscriber"){
+    
+        if (auth()->check() && !auth()->user()->hasRole('Subscriber')){
             return $next($request);
         }
 
