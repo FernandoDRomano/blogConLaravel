@@ -201,7 +201,7 @@
                 </a>
                 <ul class="nav nav-treeview ml-1 ml-lg-2" style="display: none;">
                   <li class="nav-item">
-                    <a href="#" class="nav-link">
+                    <a href="{{ route('admin.permissions.index') }}" class="nav-link">
                       <i class="fas fa-eye nav-icon"></i>
                       <p>Ver todos los Permisoss</p>
                     </a>

@@ -22,16 +22,18 @@ class CreatePermissionTables extends Migration
 
         Schema::create($tableNames['permissions'], function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name');
+            $table->string('name')->unique();
             $table->string('guard_name')->nullable();
+            $table->string('display_name')->nullable();
             $table->mediumText('description')->nullable();
             $table->timestamps();
         });
 
         Schema::create($tableNames['roles'], function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name');
+            $table->string('name')->unique();
             $table->string('guard_name')->nullable();
+            $table->string('display_name')->nullable()->unique();
             $table->mediumText('description')->nullable();
             $table->timestamps();
         });

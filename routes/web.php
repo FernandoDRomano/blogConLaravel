@@ -15,6 +15,7 @@ Route::view('/contact', 'public.contact')->name('pages.contact');
 Route::group(
     ['prefix' => 'admin', 'middleware' => ['auth', 'authorizedPersonalOnly'], 'namespace' => 'Admin']
     ,function () {
+
         Route::view('home', 'admin.dashboard')->name('admin.dashboard');
         
         /* CATEGORIES */
@@ -37,6 +38,9 @@ Route::group(
 
         /* IMAGES */
         Route::get('images/{image}', 'ImageController@getImage')->name('admin.images.get');
+
+        /* PERMISSIONS */
+        Route::resource('permissions', 'PermissionController', ['as' => 'admin'])->only(['index', 'edit', 'update']);
 
 });
 
