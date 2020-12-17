@@ -42,6 +42,10 @@ Route::group(
         /* PERMISSIONS */
         Route::resource('permissions', 'PermissionController', ['as' => 'admin'])->only(['index', 'edit', 'update']);
 
+        /* ROLES */
+        Route::resource('roles', 'RoleController', ['as' => 'admin']);
+        Route::get('roles/get/{role}', 'RoleController@getRole')->name('admin.roles.get');
+
 });
 
 
