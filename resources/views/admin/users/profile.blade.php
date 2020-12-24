@@ -80,7 +80,6 @@
                                         <input 
                                             type="password" 
                                             name="password" 
-                                            id="password" 
                                             placeholder="Dejar en blanco si no desea cambiar su contraseña."
                                             class="form-control">
                                     </div>
@@ -90,7 +89,6 @@
                                         <input 
                                             type="password" 
                                             name="password_confirmation" 
-                                            id="password_confirmation" 
                                             placeholder="Repita su contraseña."
                                             class="form-control">
                                     </div> 

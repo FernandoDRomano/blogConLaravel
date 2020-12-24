@@ -1,5 +1,5 @@
   <!-- Modal Create-->
-  <div class="modal fade" id="modal-create" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal fade" id="modal-change-password" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -9,19 +9,18 @@
           </button>
         </div>
         {{-- FORMULARIO --}}
-        <form id="form-create" action="{{ route('admin.users.password', auth()->user()) }}" method="POST">
+        <form id="form-change-password" action="{{ route('admin.users.password', auth()->user()) }}" method="POST">
             @csrf
             @method('PUT')
             
             <div class="modal-body">
-                <ul class="list-group mb-3 d-none" id="contentErrorsCreate"></ul>
+                <ul class="list-group mb-3 d-none" id="contentErrors"></ul>
 
                 <div class="form-group">
                   <label for="password">Contraseña</label>
                   <input 
                       type="password" 
                       name="password" 
-                      id="password" 
                       placeholder="Dejar en blanco si no desea cambiar su contraseña."
                       class="form-control">
               </div>
@@ -31,7 +30,6 @@
                   <input 
                       type="password" 
                       name="password_confirmation" 
-                      id="password_confirmation" 
                       placeholder="Repita su contraseña."
                       class="form-control">
               </div> 
@@ -51,18 +49,18 @@
 
   <script>
 
-        const modalCreate = 'modal-create';
-        let formCreate = document.getElementById("form-create");
-        let contenedorCreate = document.getElementById('contentErrorsCreate');
+        const modalChangePassword = 'modal-change-password';
+        let formChangePassword = document.getElementById("form-change-password");
+        let contenedorErrores = document.getElementById('contentErrors');
         
 
-        formCreate.addEventListener('submit', e => {
+        formChangePassword.addEventListener('submit', e => {
             e.preventDefault();
             let data = {
-                password: formCreate['password'].value,
-                password_confirmation: formCreate['password_confirmation'].value
+                password: formChangePassword['password'].value,
+                password_confirmation: formChangePassword['password_confirmation'].value
             }
-            updatePassword(formCreate.getAttribute('action'), data);
+            updatePassword(formChangePassword.getAttribute('action'), data);
         });
 
         async function updatePassword(url, data){
@@ -75,9 +73,9 @@
               console.log(datos);
 
               if(datos.success){
-                  successAction(datos, modalCreate)
+                  successAction(datos, modalChangePassword)
               }else{
-                  showErrors(datos.errors, contenedorCreate);
+                  showErrors(datos.errors, contenedorErrores);
               }
 
             } catch (error) {
@@ -142,9 +140,9 @@
 
         }
 
-        $("#modal-create").on('hidden.bs.modal', function () {
-            contenedorCreate.classList.add('d-none');
-            clearInputsModal(modalCreate);
+        $("#modal-change-password").on('hidden.bs.modal', function () {
+            contenedorErrores.classList.add('d-none');
+            clearInputsModal(modalChangePassword);
         });
 
       

@@ -221,7 +221,7 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="#" class="nav-link" data-toggle="modal" data-target="#modal-create">
+                <a href="#" class="nav-link" data-toggle="modal" data-target="#modal-change-password">
                   <i class="fas fa-user-lock nav-icon"></i>
                   <p>Cambiar Contraseña</p>
                 </a>
