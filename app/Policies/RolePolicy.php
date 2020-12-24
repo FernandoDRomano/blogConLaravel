@@ -60,7 +60,7 @@ class RolePolicy
      */
     public function delete(User $user, Role $role)
     {
-        if( $role->name === 'Admin')
+        if( $role->name === 'Admin' || $role->name === 'Subscriber')
         {
             $this->deny('No se puede eliminar este role');
         }

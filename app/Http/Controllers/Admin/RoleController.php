@@ -39,7 +39,11 @@ class RoleController extends Controller
         $role = Role::create($request->validated());
         $role->givePermissionTo($request->permissions);
 
-        return redirect()->route('admin.roles.index')->with('message', 'El Role ' . $role->display_name . ' fue creado con éxito!!!');
+        return redirect()->route('admin.roles.index')->with([
+            'message' => 'El Role <strong>' . $role->display_name . '</strong> fue creado con éxito!!!', 
+            'title' => 'Role Creado', 
+            'icon' => 'success'
+        ]);
     }
 
     public function show(Role $role)
@@ -68,7 +72,11 @@ class RoleController extends Controller
         $role->update($request->validated());
         $role->syncPermissions($request->permissions);
 
-        return redirect()->route('admin.roles.edit', $role)->with('message', 'Los cambios fueron guardados con éxito!!!');
+        return redirect()->route('admin.roles.edit', $role)->with([
+            'message' => 'Los datos fueron actualizados con éxito!!!',
+            'title' => 'Role Actualizado',
+            'icon' => 'success'
+        ]); 
     }
 
     public function destroy(Role $role)
@@ -76,6 +84,10 @@ class RoleController extends Controller
         $this->authorize('delete', $role);
 
         $role->delete();
-        return redirect()->route('admin.roles.index')->with('message', 'El role ' . $role->display_name . ' fue eliminado con éxito!!!');
+        return redirect()->route('admin.roles.index')->with([
+            'message' => 'El role <strong>' . $role->display_name . '</strong> fue eliminado con éxito!!!',
+            'title' => 'Role Eliminado',
+            'icon' => 'success'
+        ]);
     }
 }
