@@ -3,10 +3,10 @@
 namespace App;
 
 use App\Post;
+use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
@@ -20,7 +20,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'last_name', 'photo', 'role_id'
+        'name', 'email', 'password', 'last_name', 'photo'
     ];
 
     /**
@@ -45,11 +45,97 @@ class User extends Authenticatable
         RELACIONES CON OTROS MODELOS
     */
 
-    public function role(){
-        return $this->belongsTo(Role::class);
-    }
-
     public function posts(){
         return $this->hasMany(Post::class);
     }
+
+    public function comments(){
+        return $this->hasMany(Comment::class);
+    }
+
+    /* 
+        ACCESORES Y MUTADORES
+    */
+
+    public function setPhotoAttribute($value){
+        if ($value === '/admin/img/foto_perfil.jpg') {
+            $this->attributes['photo'] = $value;
+        }else{
+            $this->attributes['photo'] = '/storage/' . $value;
+        }
+    }
+
+    /* 
+        METODOS
+    */
+
+    public function getFullName(){
+        return $this->last_name . ', ' . $this->name;
+    }
+
+    public function getRoleDisplayNames(){
+        if ($this->roles->count()) {
+            return $this->roles->implode('display_name', ', ');
+        }
+
+        return 'No tiene roles asignados';
+    }
+
+    public function getPermissionDisplayNames(){
+        if ($this->permissions->count()) {
+            return $this->permissions->implode('display_name', ', ');
+        }
+
+        return 'No tiene permisos asignados';
+    }
+
+    public function createUser($request, $password)
+    {
+        $this->fill($request);
+        $this->password = bcrypt($password);
+        $this->photo = '/admin/img/foto_perfil.jpg';
+        $this->save();
+
+        
+        $this->syncRolesUser($request);
+        $this->syncPermissionsUser($request);
+    }
+
+    public function updateUser($request)
+    {
+        $this->fill($request);
+        $this->update();
+
+        $this->syncRolesUser($request);
+        $this->syncPermissionsUser($request);
+    }
+
+    public function updateProfile($request){
+        $this->fill($request);
+        isset($request['photo']) ? $this->photo = $request['photo']->store('users') : $this->photo;
+        isset($request['password']) ? $this->password = bcrypt($request['password']) : $this->password;
+        $this->update();
+    }
+
+    public function updatePassword($request){
+        $this->password = bcrypt($request['password']);
+        $this->update();
+    }
+
+    public function syncRolesUser($request){
+        if (empty($request['roles'])) {
+            $this->syncRoles();
+        }else{
+            $this->syncRoles($request['roles']);
+        }
+    }
+
+    public function syncPermissionsUser($request){
+        if (empty($request['permissions'])) {
+            $this->syncPermissions();
+        }else{
+            $this->syncPermissions($request['permissions']);
+        }
+    }
+
 }

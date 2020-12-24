@@ -11,10 +11,12 @@
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
-          <img src="/admin/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+          <img src="{{ auth()->user()->photo }}" class="img-circle elevation-2" alt="{{auth()->user()->getFullName()}}">
         </div>
         <div class="info">
-          <a href="#" class="d-block">Alexander Pierce</a>
+          <p class="mb-0">
+            <a href="{{ route('admin.users.show', auth()->user() ) }}" class="">{{ auth()->user()->getFullName() }}</a>
+          </p>
         </div>
       </div>
 
@@ -147,17 +149,11 @@
                 </a>
                 <ul class="nav nav-treeview ml-1 ml-lg-2" style="display: none;">
                   <li class="nav-item">
-                    <a href="#" class="nav-link">
-                      <i class="fas fa-eye nav-icon"></i>
-                      <p>Ver todos los usuarios</p>
+                    <a href="{{ route('admin.users.index') }}" class="nav-link">
+                      <i class="fas fa-bars nav-icon"></i>
+                      <p>Administrar Usuarios</p>
                     </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="#" class="nav-link">
-                      <i class="fas fa-plus-circle nav-icon"></i>
-                      <p>Crear un usuario</p>
-                    </a>
-                  </li>                     
+                  </li>               
                 </ul>
               </li>
             </ul>
@@ -216,16 +212,16 @@
                 <i class="right fas fa-angle-left"></i>
               </p>
             </a>
-            {{-- SUB MENU PERMISOS --}}
+            {{-- SUB MENU CONFIGURACIÓN --}}
             <ul class="nav nav-treeview ml-1 ml-lg-2" style="display: none;">
               <li class="nav-item">
-                <a href="#" class="nav-link">
+                <a href="{{ route('admin.users.show', auth()->user()) }}" class="nav-link">
                   <i class="fas fa-user-circle nav-icon"></i>
                   <p>Perfil</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="#" class="nav-link">
+                <a href="#" class="nav-link" data-toggle="modal" data-target="#modal-create">
                   <i class="fas fa-user-lock nav-icon"></i>
                   <p>Cambiar Contraseña</p>
                 </a>
@@ -251,3 +247,5 @@
     </div>
     <!-- /.sidebar -->
   </aside>
+
+@include('admin.users._changePassword')

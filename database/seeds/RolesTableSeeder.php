@@ -34,10 +34,18 @@ class RolesTableSeeder extends Seeder
             "description" => "Son todos los usuarios que se suscriben para ver los posts del blog"
         ]);
 
+        $roleModerator = Role::create([
+            "name" => "Moderator",
+            "guard_name" => "web",
+            "display_name" => "Moderador",
+            "description" => "Son los usuarios moderadores de comentarios en el blog"
+        ]);
+
         $admin = User::create([
             "name" => "Fernando Daniel",
             "last_name" => "Romano",
             "email" => "fernando@gmail.com",
+            "photo" => "/admin/img/foto_perfil.jpg",
             "password" => bcrypt('fer4236814'),
         ]);
 
@@ -47,6 +55,7 @@ class RolesTableSeeder extends Seeder
             "name" => "Evangelina",
             "last_name" => "Ibarra",
             "email" => "eva@gmail.com",
+            "photo" => "/admin/img/foto_perfil.jpg",
             "password" => bcrypt('fer4236814'),
         ]);
 
@@ -56,6 +65,7 @@ class RolesTableSeeder extends Seeder
             "name" => "Nicolas Gabriel",
             "last_name" => "Romano",
             "email" => "nicolas@gmail.com",
+            "photo" => "/admin/img/foto_perfil.jpg",
             "password" => bcrypt('fer4236814'),
         ]);
 

@@ -130,13 +130,12 @@
                 class="form-control 
                 @error('password_confirmation') is-invalid @enderror" 
                 name="password_confirmation" 
- 
-                placeholder="Contraseña">
+                placeholder="Repita la contraseña">
             <div class="input-group-append">
                 <div class="input-group-text">
-                <span class="fas fa-lock"></span>
+                  <span class="fas fa-lock"></span>
                 </div>
-          </div>
+            </div>
           @error('password_confirmation')
             <span class="invalid-feedback" role="alert">
                 <strong>{{ $message }}</strong>

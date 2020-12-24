@@ -1,5 +1,11 @@
 <?php
 
+// Route::get('mail', function () {
+//         $user = App\User::find(1);
+//         $password = '$asd1xk89';
+//         return new App\Mail\UserCreated($user, $password);
+// });
+
 /* PAGINAS PUBLICAS */
 Route::get('/', 'BlogController@index')->name('pages.blog');
 Route::get('/post/{post}', 'BlogController@show')->name('pages.show.post');
@@ -45,6 +51,13 @@ Route::group(
         /* ROLES */
         Route::resource('roles', 'RoleController', ['as' => 'admin']);
         Route::get('roles/get/{role}', 'RoleController@getRole')->name('admin.roles.get');
+
+        /* USERS */
+        Route::resource('users', 'UserController', ['as' => 'admin']);
+        Route::get('users/get/{user}', 'UserController@getUser')->name('admin.users.get');
+        Route::get('users/{user}/profile', 'UserController@profile')->name('admin.users.profile');
+        Route::put('users/{user}/profile', 'UserController@updateProfile')->name('admin.users.profile.update');
+        Route::put('users/{user}/password', 'UserController@updatePassword')->name('admin.users.password');
 
 });
 

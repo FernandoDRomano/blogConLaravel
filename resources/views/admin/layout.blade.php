@@ -13,6 +13,8 @@
   <link rel="stylesheet" href="/admin/plugins/fontawesome-free/css/all.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="/admin/css/adminlte.min.css">
+  {{-- SweetAlert2 --}}
+  <link rel="stylesheet" href="/admin/plugins/sweetalert2/sweetalert2.min.css">
 
   {{-- STYLES ADICIONALES --}}
   @stack('links')
@@ -36,7 +38,9 @@
     <!-- Main content -->
     <div class="content">
       <div class="container-fluid">
-        @include('admin.partials._session')
+
+        @include('admin.partials._viewErrors')
+
         {{-- AQUI VA EL CONTENIDO DE LA PÁGINA --}}
         @yield('content')
         
@@ -60,6 +64,10 @@
 <script src="/admin/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- AdminLTE App -->
 <script src="/admin/js/adminlte.min.js"></script>
+{{-- SweetAlert --}}
+<script src="/admin/plugins/sweetalert2/sweetalert2.min.js"></script>
+
+@include('admin.partials._messageSession')
 
 {{-- SCRIPTS ADICIONALES --}}
 @stack('script')
