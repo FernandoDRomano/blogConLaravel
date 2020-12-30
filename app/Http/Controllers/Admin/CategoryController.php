@@ -13,17 +13,25 @@ class CategoryController extends Controller
 
     public function index()
     {
-        return view('admin.categories.index');
+        $this->authorize('view', $category = new Category);
+
+        return view('admin.categories.index', [
+            "category" => $category
+        ]);
     }
 
     public function store(SaveCategoryRequest $request)
     {
-        $category = new Category();
-        $category->name = $request->name;
-        $category->generateUrl();
-        $category->save();
+        $this->authorize('create', new Category);
 
-        return response()->json(["success" => true, "session" => "La Categoría " . $category->name ." fue creada con éxito!!!"]);
+        $category = Category::create($request->validated());        
+
+        return response()->json([
+            'success' => true, 
+            'message' => 'La Categoría <strong>' . $category->name . '</strong> fue creada con éxito!!!',
+            'title' => 'Categoría Creada',
+            'icon' => 'success'
+        ]);
     }
 
     public function all(){
@@ -41,20 +49,34 @@ class CategoryController extends Controller
 
     public function getCategory(Category $category)
     {
-        return response()->json($category);
+        return response()->json($category->load('posts'));
     }
 
     public function update(SaveCategoryRequest $request, Category $category)
     {
-        $category->name = $request->name;
-        $category->generateUrl();
-        $category->update();
-        return response()->json(["success" => true, "session" => "La Categoría " . $category->name ." fue editada con éxito!!!"]); 
+        $this->authorize('update', $category);
+
+        $category->update(['name' => $request->name]);
+
+        return response()->json([
+            'success' => true, 
+            'message' => 'La Categoría <strong>' . $category->name . '</strong> fue editada con éxito!!!',
+            'title' => 'Categoría Actualizada',
+            'icon' => 'success'
+        ]);
     }
 
     public function destroy(Category $category)
     {
+        $this->authorize('delete', $category);
+
         $category->delete();
-        return response()->json(["success" => true, "session" => "La Categoría " . $category->name ." fue eliminada con éxito!!!"]);
+
+        return response()->json([
+            'success' => true, 
+            'message' => 'La Categoría <strong>' . $category->name . '</strong> fue eliminada con éxito!!!',
+            'title' => 'Categoría Eliminada',
+            'icon' => 'success'
+        ]);
     }
 }
