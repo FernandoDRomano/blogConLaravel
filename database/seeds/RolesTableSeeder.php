@@ -61,6 +61,16 @@ class RolesTableSeeder extends Seeder
 
         $writter->assignRole($roleWritter);
 
+        $moderator = User::create([
+            "name" => "Enrique",
+            "last_name" => "Romano",
+            "email" => "enrique@gmail.com",
+            "photo" => "/admin/img/foto_perfil.jpg",
+            "password" => bcrypt('fer4236814'),
+        ]);
+
+        $moderator->assignRole($roleModerator);
+
         $subscriber = User::create([
             "name" => "Nicolas Gabriel",
             "last_name" => "Romano",

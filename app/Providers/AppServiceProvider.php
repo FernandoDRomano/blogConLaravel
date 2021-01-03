@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Post;
+use App\Image;
+use App\Observers\PostObserver;
+use App\Observers\ImageObserver;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -23,6 +27,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-
+        Post::observe(PostObserver::class);
+        Image::observe(ImageObserver::class);
     }
 }
