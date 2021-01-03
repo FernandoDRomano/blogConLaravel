@@ -6,10 +6,6 @@
     <link rel="stylesheet" href="/admin/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="/admin/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
     <link rel="stylesheet" href="/admin/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
-    <!-- SweetAlert2 -->
-    <link rel="stylesheet" href="/admin/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
-    <!-- Toastr -->
-    <link rel="stylesheet" href="/admin/plugins/toastr/toastr.min.css">
 @endpush
 
 @section('contentHeader')
@@ -22,9 +18,11 @@
         <div class="card-header">
             <div class="contenedor d-flex justify-content-between align-items-center">
                 <h3 class="h3 mb-0">Administración de Etiquetas</h3>
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-create">
-                    <i class="fas fa-plus-circle"></i> Nuevo
-                </button>
+                @can('create', $tag)
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-create">
+                        <i class="fas fa-plus-circle"></i> Nuevo
+                    </button>
+                @endcan
             </div>
         </div>
         <div class="card-body">
@@ -105,38 +103,6 @@
         </div>
     </div>
 
-    <!-- Modal delete-->
-    <div class="modal fade" id="modal-delete" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header bg-danger">
-              <h5 class="modal-title text-white" id="exampleModalLabel">Eliminar Etiqueta</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            {{-- FORMULARIO --}}
-            <form id="form-delete" action="#" method="POST">
-                @csrf
-                @method('DELETE')
-
-                <div class="modal-body">
-                    <ul class="list-group mb-3 d-none" id="contentErrorsDelete"></ul>
-
-                    <input type="hidden" name="tag">
-                    <p name="message" class="h4 text-center m-3"></p>
-                
-                </div>
-
-                <div class="modal-footer">
-                    <button type="close" class="btn btn-outline-secondary " data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-danger text-white">Eliminar</button>
-                </div>
-             </form>
-          </div>
-        </div>
-    </div>
-
 
 @endsection
 
@@ -151,11 +117,6 @@
     <script src="/admin/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
     <script src="/admin/plugins/datatables-buttons/js/buttons.print.min.js"></script>
     <script src="/admin/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
-
-    <!-- SweetAlert2 -->
-    <script src="/admin/plugins/sweetalert2/sweetalert2.min.js"></script>
-    <!-- Toastr -->
-    <script src="/admin/plugins/toastr/toastr.min.js"></script>
 
     <!-- Page specific script -->
     <script>
@@ -203,25 +164,12 @@
                     }
         });
 
-        const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 2500,
-            width: '50rem',
-            padding: '1rem',
-            timerProgressBar: true,
-        })
-
         const modalCreate = 'modal-create';
         const modalUpdate = 'modal-edit';
-        const modalDestroy = 'modal-delete';
         let formCreate = document.getElementById("form-create");
         let formUpdate = document.getElementById("form-edit");
-        let formDestroy = document.getElementById("form-delete");
         let contenedorCreate = document.getElementById('contentErrorsCreate')
         let contenedorEdit = document.getElementById('contentErrorsEdit')
-        let contenedorDelete = document.getElementById('contentErrorsDelete')
 
         async function getTagEdit(e){
             e.preventDefault();
@@ -241,20 +189,69 @@
 
         async function getTagDelete(e) {
             e.preventDefault();
-            console.log(e);
             try {
                 const tag = await getTag(e);
                 
-                document.querySelector('#modal-delete p[name="message"]').innerHTML = `
-                    ¿Estás seguro de eliminar la etiqueta <strong class="text-danger">${tag.name}</strong>?
-                `;
-
-                document.querySelector('#modal-delete input[name="tag"]').value= tag.url;
-
-                $('#modal-delete').modal('show');
+                showModalDeleteTag(tag);
 
             } catch (error) {
                 console.log(error)
+            }
+        }
+
+        function showModalDeleteTag(tag){
+            Swal.fire({
+                
+                title: 'Eliminar Etiqueta',
+                html: `
+                        ¿Estás seguro de eliminar la Etiqueta <strong class="text-danger">${tag.name}</strong>?
+                        ${tag.posts.length ? '<p class="mb-0 text-muted">Si lo eliminas ' + tag.posts.length + ' Post quedarán sin esta Etiqueta.</p>' : ''}
+                    `,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Si, Eliminar!',
+                cancelButtonText: 'Cerrar',
+                buttonsStyling:false,
+                customClass: {
+                    confirmButton: 'btn btn-danger text-white mr-2',
+                    cancelButton: 'btn btn-outline-secondary'
+                },
+
+                }).then((confirmation) => {
+
+                    if (confirmation.value) {
+                        destroyTag(tag);
+                    }
+
+            })
+        }
+
+        async function destroyTag(tag) {
+            try {
+                let url = '/admin/tags/' + tag.url    
+
+                const config = getConfigFetch('DELETE')
+
+                const resp = await fetch(url, config)
+
+                if(resp.status === 403){
+                    Swal.fire({
+                        title: 'Ups Error',
+                        html: '<strong>No tienes permisos para realizar esta acción</strong>',
+                        icon: 'error',
+                        confirmButtonText: 'Cerrar'
+                    })
+                    return;
+                }
+
+                const datos = await resp.json();
+
+                if(datos.success){
+                    successActionTag(datos, null)
+                }
+
+            } catch (error) {
+                console.error(error);
             }
         }
 
@@ -299,10 +296,8 @@
                 const resp = await fetch(url, config);
                 const datos = await resp.json();    
 
-                console.log(datos);
-
                 if(datos.success){
-                    successAction(datos.session, modalCreate)
+                    successActionTag(datos, modalCreate);
                 }else{
                     showErrors(datos.errors, contenedorCreate);
                 }
@@ -329,50 +324,25 @@
                 const config = getConfigFetch('PUT', data)
 
                 const resp = await fetch(url, config)
+                
+                if(resp.status === 403){
+                    showErrors({Error: 'No tienes permisos para realizar esta acción'}, contenedorEdit);
+                    return;
+                }
+
                 const datos = await resp.json();
 
                 if(datos.success){
-                    successAction(datos.session, modalUpdate)
+                    successActionTag(datos, modalUpdate);
                 }else{
                     showErrors(datos.errors, contenedorEdit);
-                } 
-
-            } catch (error) {
-                console.error(error);
-            }
-
-        }
-
-        formDestroy.addEventListener('submit', e => {
-            e.preventDefault();
-            const tag = document.querySelector('#modal-delete input[name="tag"]').value;
-
-            destroyTag(tag);
-        })
-
-        async function destroyTag(tag) {
-            try {
-                let url = '/admin/tags/' + tag     
-
-                const config = getConfigFetch('DELETE')
-
-                const resp = await fetch(url, config)
-                const datos = await resp.json();
-
-                if(datos.success){
-                    successAction(datos.session, modalDestroy)
-                }else{
-                    let errors = {
-                        Error: 'Se produjo un error inesperado en el sistema, y no se pudo eliminar'
-                    }
-
-                    showErrors(errors, contenedorDelete);
                 }
 
             } catch (error) {
                 console.error(error);
             }
-        }
+
+        } 
 
         function getConfigFetch(method, data =  null){
             return {
@@ -388,11 +358,10 @@
             }
         }
 
-        function successAction(message, modal){
-            clearInputsModal(modal);
+        function successActionTag(datos, modal){
             closeModal(modal);
             reloadTableAjax();
-            showMessageSession(message);
+            showMessageSessionTag(datos);
         }
 
         function closeModal(modal){
@@ -411,6 +380,7 @@
         }
 
         function showErrors(errors, contenedor){
+            console.log(errors);
             contenedor.innerHTML = '';
 
             let li = '';
@@ -425,26 +395,28 @@
             contenedor.classList.remove('d-none');
         }
 
-        function showMessageSession(message){
+        function showMessageSessionTag(datos){
 
-            Toast.fire({
-                icon: 'success',
-                title: `${message}`,
+            Swal.fire({
+              title: datos.title,
+              html: datos.message,
+              icon: datos.icon,
+              confirmButtonText: 'Cerrar'
             })
 
         }
 
         $("#modal-create").on('hidden.bs.modal', function () {
             contenedorCreate.classList.add('d-none');
-            clearInputsModal(modalCreate);
+            
+            const inputsText = document.querySelectorAll(`#modal-create input[type="text"]`);
+            for (let i = 0; i < inputsText.length; i++) {
+                inputsText[i].value = '';
+            }
         });
 
         $("#modal-edit").on('hidden.bs.modal', function () {
             contenedorEdit.classList.add('d-none');
-        });
-
-        $("#modal-delete").on('hidden.bs.modal', function () {
-            contenedorDelete.classList.add('d-none');
         });
 
 

@@ -22,9 +22,11 @@
         <div class="card-header">
             <div class="contenedor d-flex justify-content-between align-items-center">
                 <h3 class="h3 mb-0">Administración de Posts</h3>
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-create">
-                    <i class="fas fa-plus-circle"></i> Nuevo
-                </button>
+                @can('create', $post)
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-create">
+                        <i class="fas fa-plus-circle"></i> Nuevo
+                    </button>
+                @endcan
             </div>
         </div>
         <div class="card-body">
@@ -46,9 +48,15 @@
                     <tr>
                         <td>{{ $post->id }}</td>
                         <td>{{ Str::limit($post->title, 20) }}</td>
-                        <td>{{ $post->published_at ? $post->published_at->format('d-m-Y') : '' }}</td>
+                        <td>{{ $post->published_at ? $post->published_at->format('d-m-Y') : 'No tiene' }}</td>
                         <td>{{ $post->user->name }}</td>
-                        <td>{{ $post->category ? $post->category->name : '' }}</td>
+                        <td>
+                            @if ($post->category)
+                                <p class="d-inline lead"><span class="badge badge-pill badge-primary">{{$post->category->name}}</span></p>
+                            @else
+                                <p class="lead"><span class="badge badge-pill badge-light">No tiene Categoría</span></p>
+                            @endif
+                        </td>
                         <td>
                             @forelse ($post->tags as $tag)
                                 <p class="d-inline lead"><span class="badge badge-pill badge-info">{{$tag->name}}</span></p>
@@ -64,24 +72,50 @@
                             @endif
                         </td>
                         <td> 
-                            <a 
-                                href="{{ route('admin.posts.edit', $post) }}" 
-                                class="btn btn-warning text-white btn-sm">
-                                <i class="fas fa-edit"></i>
-                            </a>
-
-                            <a 
-                                href="{{ route('admin.posts.get', $post) }}" 
-                                class="btn btn-danger btn-sm"
-                                onclick="getPostDelete(event)">
-                                <i class="fas fa-trash-alt"></i>
-                            </a>    
+                            @can('update', $post)
+                                <a 
+                                    href="{{ route('admin.posts.edit', $post) }}" 
+                                    class="btn btn-warning text-white btn-sm">
+                                    <i class="fas fa-edit"></i>
+                                </a>     
+                            @endcan
+                           
+                            @can('delete', $post)    
+                                <a 
+                                    href="{{ route('admin.posts.get', $post) }}" 
+                                    class="btn btn-danger btn-sm"
+                                    onclick="getPostDelete(event)">
+                                    <i class="fas fa-trash-alt"></i>
+                                </a>    
+                            @endcan
                             
-                            <a href="{{route('admin.posts.show', $post)}}"
-                                target="_blank"
-                                class="btn btn-dark btn-sm">
-                                <i class="fas fa-eye"></i>
-                            </a>
+                            @can('show', $post)
+                                <a href="{{route('admin.posts.show', $post)}}"
+                                    target="_blank"
+                                    style="background-color: #3c8dbc"
+                                    class="btn text-white btn-sm">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                            @endcan
+
+                            @can('update-approved', $post)    
+                                @if ($post->approved)
+                                    <a 
+                                        href="{{ route('admin.posts.get', $post) }}" 
+                                        onclick="updatePostApproved(event)" 
+                                        class="btn btn-sm text-white" style="background-color: #111111">
+                                        <i class="fas fa-times-circle"></i>    
+                                    </a>
+                                @else
+                                    <a 
+                                        href="{{ route('admin.posts.get', $post) }}" 
+                                        onclick="updatePostApproved(event)" 
+                                        class="btn btn-sm text-white" style="background-color: #605ca8">
+                                        <i class="fas fa-check-circle"></i>
+                                    </a>
+                                @endif
+                            @endcan
+            
                         </td>
                     </tr>
                     @empty
@@ -123,37 +157,15 @@
     </div>
   </div>
 
-    <!-- Modal delete-->
-    <div class="modal fade" id="modal-delete" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header bg-danger">
-              <h5 class="modal-title text-white" id="exampleModalLabel">Eliminar Post</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            {{-- FORMULARIO --}}
-            <form id="form-delete" action="#" method="POST">
-                @csrf
-                @method('DELETE')
+    <form method="POST" id="form-delete">
+        @csrf
+        @method('DELETE')
+    </form>
 
-                <div class="modal-body">
-                    <ul class="list-group mb-3 d-none" id="contentErrorsDelete"></ul>
-
-                    <input type="hidden" name="post">
-                    <p name="message" class="h4 text-center m-3"></p>
-                
-                </div>
-
-                <div class="modal-footer">
-                    <button type="close" class="btn btn-outline-secondary " data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-danger text-white">Eliminar</button>
-                </div>
-             </form>
-          </div>
-        </div>
-    </div>
+    <form method="POST" id="form-update">
+        @csrf
+        @method('PUT')
+    </form>
 
 
 @endsection
@@ -207,24 +219,98 @@
         const modalDestroy = 'modal-delete';
         let formCreate = document.getElementById("form-create");
         let formDestroy = document.getElementById("form-delete");
+        let formUpdate = document.getElementById('form-update');
         let contenedorCreate = document.getElementById('contentErrorsCreate')
+
+        async function updatePostApproved(e){
+            try {
+                e.preventDefault();
+
+                const post = await getPost(e);
+
+                showModalUpdateApprovedPost(post);
+
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        function showModalUpdateApprovedPost(post){
+            Swal.fire({
+                
+                title: `${ post.approved ? 'Desaprobar Post' : 'Aprobar Post' }`,
+                html: `
+                        ${ post.approved ? 
+                            '¿Estás seguro de Desaprobar el Post <strong class="text-danger">' + post.title  + '</strong>?' : 
+                            '¿Estás seguro de Aprobar el Post <strong class="text-danger">' + post.title  + '</strong>?' 
+                        }
+                        
+                    `,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: `${post.approved ? 'Si, Desaprobar el post' : 'Si, Aprobar el post'}`,
+                cancelButtonText: 'Cerrar',
+                buttonsStyling:false,
+                customClass: {
+                    confirmButton: `btn text-white mr-2 ${post.approved ? 'btn-danger' : 'btn-info'}`,
+                    cancelButton: 'btn btn-outline-secondary'
+                },
+
+                }).then((confirmation) => {
+
+                    if (confirmation.value) {
+                        updatePost(post);
+                    }
+
+            })
+        }
+
+        function updatePost(post){
+            formUpdate.setAttribute('action', `/admin/posts/${post.url}/approved`);
+            formUpdate.submit();
+        }
 
         async function getPostDelete(e) {
             e.preventDefault();
             try {
                 const post = await getPost(e);
                 
-                document.querySelector('#modal-delete p[name="message"]').innerHTML = `
-                    ¿Estás seguro de eliminar el Post <strong class="text-danger">${post.title}</strong>?
-                `;
-
-                document.querySelector('#modal-delete input[name="post"]').value= post.url;
-
-                $('#modal-delete').modal('show');
+                showModalDeletePost(post);
 
             } catch (error) {
                 console.log(error)
             }
+        }
+
+        function showModalDeletePost(post){
+            Swal.fire({
+                
+                title: 'Eliminar Post',
+                html: `
+                        ¿Estás seguro de eliminar el Post <strong class="text-danger">${post.title}</strong>?
+                    `,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Si, Eliminar!',
+                cancelButtonText: 'Cerrar',
+                buttonsStyling:false,
+                customClass: {
+                    confirmButton: 'btn btn-danger text-white mr-2',
+                    cancelButton: 'btn btn-outline-secondary'
+                },
+
+                }).then((confirmation) => {
+
+                    if (confirmation.value) {
+                        destroyPost(post);
+                    }
+
+            })
+        }
+
+        function destroyPost(post) {
+            formDestroy.setAttribute('action', `/admin/posts/${post.url}`);
+            formDestroy.submit();
         }
 
         async function getPost(e){

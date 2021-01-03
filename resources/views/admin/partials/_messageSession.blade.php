@@ -1,4 +1,5 @@
 <script>
+
     @if (session('message'))
   
         Swal.fire({
@@ -18,4 +19,5 @@
               confirmButtonText: 'Cerrar'
         })
     @endif
+
 </script>

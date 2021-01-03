@@ -40,7 +40,8 @@ Route::group(
         Route::get('posts/get/{post}', 'PostController@getPost')->name('admin.posts.get');
         Route::resource('posts', 'PostController', ['as' => 'admin']);
         Route::post('posts/{post}/images', 'PostController@uploadImages')->name('admin.posts.upload.images');
-        Route::delete('posts/images/{image}', 'PostController@destroyImages')->name('admin.posts.destroy.images');
+        Route::delete('posts/{post}/images/{image}', 'PostController@destroyImages')->name('admin.posts.destroy.images');
+        Route::put('posts/{post}/approved', 'PostController@updateApproved')->name('admin.posts.update.approved');
 
         /* IMAGES */
         Route::get('images/{image}', 'ImageController@getImage')->name('admin.images.get');
