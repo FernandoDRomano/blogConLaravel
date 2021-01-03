@@ -23,7 +23,7 @@ class PostsTableSeeder extends Seeder
                 'published_at' => Carbon::now(),
                 'extract' => 'Este es un extracto ' . $i,
                 'body' => 'body ' . $i,
-                'approved' => true,
+                'approved' => false,
                 'url' => Str::slug($nombre),
                 'user_id' => 2,
                 'category_id' => 1

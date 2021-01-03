@@ -11,7 +11,11 @@ class TagController extends Controller
 
     public function index()
     {
-        return view('admin.tags.index');
+        $this->authorize('view', $tag = new Tag);
+
+        return view('admin.tags.index', [
+            "tag" => $tag
+        ]);
     }
 
     public function all(){
@@ -28,33 +32,48 @@ class TagController extends Controller
 
     public function getTag(Tag $tag)
     {
-        return response()->json($tag);
+        return response()->json($tag->load('posts'));
     }
 
     public function store(SaveTagRequest $request)
     {
-        $tag = new Tag();
-        $tag->fill($request->validated());
-        $tag->generateUrl();
-        $tag->save();
+        $this->authorize('create', new Tag);
+
+        $tag = Tag::create($request->validated());
 
         return response()->json([
-            "success" => true,
-            "session" => "La Etiqueta " . $tag->name ." fue creada con éxito!!!"
+            'success' => true,
+            'message' => 'La Etiqueta <strong>' . $tag->name . '</strong> fue creada con éxito!!!',
+            'title' => 'Etiqueta Creada',
+            'icon' => 'success'
         ]);
     }
 
     public function update(SaveTagRequest $request, Tag $tag)
     {
-        $tag->fill($request->validated());
-        $tag->generateUrl();
-        $tag->update();
-        return response()->json(["success" => true, "session" => "La Etiqueta " . $tag->name ." fue editada con éxito!!!"]); 
+        $this->authorize('update', $tag);
+
+        $tag->update(['name' => $request->name]);
+
+        return response()->json([
+            'success' => true, 
+            'message' => 'La Etiqueta <strong>' . $tag->name .'</strong> fue editada con éxito!!!',
+            'title' => 'Etiqueta Actualizada',
+            'icon' => 'success'
+        ]); 
     }
 
     public function destroy(Tag $tag)
     {
+        $this->authorize('delete', $tag);
+
         $tag->delete();
-        return response()->json(["success" => true, "session" => "La Etiqueta " . $tag->name ." fue eliminada con éxito!!!"]);
+        
+        return response()->json([
+            'success' => true, 
+            'message' => 'La Etiqueta <strong>' . $tag->name .'</strong> fue eliminada con éxito!!!',
+            'title' => 'Categoría Eliminada',
+            'icon' => 'success'
+        ]);
     }
 }

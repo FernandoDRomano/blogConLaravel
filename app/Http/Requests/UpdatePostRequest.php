@@ -35,8 +35,8 @@ class UpdatePostRequest extends FormRequest
             ],
             'extract' => 'required',
             'body' => 'required',
-            'category_id' => 'required',
-            'tags' => 'required',
+            'category_id' => 'required|exists:categories,id',
+            'tags' => 'required|exists:tags,id',
             'published_at' => 'sometimes|nullable|date',
             'iframe' => 'sometimes'
         ];

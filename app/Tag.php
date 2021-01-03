@@ -21,6 +21,16 @@ class Tag extends Model
     }
 
     /* 
+        MUTADORES Y ACCESORES
+    */
+
+    //PARA QUE AL GUARDAR EL NOMBRE MODIFIQUE LA URL AUTOMATICAMENTE
+    public function setNameAttribute($value){
+        $this->attributes['name'] = $value;
+        $this->attributes['url'] = $this->generateUrl();
+    }
+
+    /* 
         METODOS
     */
 
@@ -30,6 +40,7 @@ class Tag extends Model
     }
 
     public function generateUrl(){
-        $this->url = Str::slug($this->name);
+        return Str::slug($this->name);
     }
+
 }

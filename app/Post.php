@@ -9,6 +9,8 @@ use App\Category;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
+use phpDocumentor\Reflection\Types\Boolean;
+use PhpParser\Node\Expr\Cast\String_;
 
 class Post extends Model
 {
@@ -40,6 +42,16 @@ class Post extends Model
     }
 
     /* 
+        MUTADORES Y ACCESORES
+    */
+
+    //PARA QUE AL GUARDAR EL NOMBRE MODIFIQUE LA URL AUTOMATICAMENTE
+    public function setTitleAttribute($value){
+        $this->attributes['title'] = $value;
+        $this->attributes['url'] = $this->generateUrl();
+    }
+
+    /* 
         METODOS
     */
 
@@ -48,28 +60,43 @@ class Post extends Model
         return 'url';
     }
 
+    public function validateApproval(){
+        if($this->title && $this->extract && $this->body &&$this->published_at && $this->user_id && $this->category_id){
+            return true;
+        }
+
+        return false;
+    }
+
+    public function updateApprovedOrDisapprove(){
+        $this->update([
+            'approved' => $this->approved ? 0 : 1
+        ]);
+
+        return [
+            'success' => true, 
+            'message' => 'El Post <strong>' . $this->title .'</strong> fue actualizado su estado a <strong>' . ($this->approved ? 'Aprobado' : 'Desaprobado') . '</strong>',
+            'title' => 'Post Actualizado',
+            'icon' => 'success'
+        ];
+    }
+
     public function scopeApproveds($query){
         return $query->whereNotNull('published_at')
                      ->where('published_at', '<=' , Carbon::now())
                      ->where('approved', true); 
     }
 
+    public function scopeOwner($query){
+        if(auth()->user()->hasRole('Admin') || auth()->user()->hasRole('Moderator') || auth()->user()->hasPermissionTo('View Posts')){
+            return $query;
+        }
+
+        return $query->where('user_id', '=' , auth()->user()->id);
+    }
+
     public function isVisibled(){
         return (bool) $this->published_at && $this->published_at <= today() && $this->approved;
-    }
-
-    public function createPost($request){
-        $this->fill($request->all());
-        $this->generateUrl();
-        $this->user_id = auth()->user()->id;
-        $this->save();
-    }
-
-    public function deletePost()
-    {
-        $this->images->each->deleteImage();
-        $this->tags()->detach();
-        $this->delete();
     }
     
     public function updatePostAndSyncTags($request){
@@ -90,7 +117,7 @@ class Post extends Model
             $url .= '-' . uniqid();
         }
 
-        $this->url = $url;
+        return $url;
     }
 
     public function typeViewImageOrCarousel($view = null){

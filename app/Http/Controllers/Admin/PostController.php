@@ -16,8 +16,11 @@ class PostController extends Controller
 
     public function index()
     {
+        $this->authorize('view', $post = new Post);
+
         return view('admin.posts.index', [
-            "posts" => Post::orderBy('created_at')->with(['user', 'category', 'images', 'tags'])->get(),
+            "posts" => Post::Owner()->latest()->with(['user', 'category', 'tags'])->get(),
+            'post' => $post,
         ]);
     }
 
@@ -28,13 +31,20 @@ class PostController extends Controller
 
     public function store(StorePostRequest $request)
     {
-        $post = new Post();
-        $post->createPost($request);
-        return response()->json(['success' => 'true', 'url' => route('admin.posts.edit', $post)]);
+        $this->authorize('create', new Post);
+
+        $post = Post::create($request->validated());
+
+        return response()->json([
+            'success' => 'true', 
+            'url' => route('admin.posts.edit', $post),
+        ]);
     }
 
     public function show(Post $post)
     {
+        $this->authorize('show', $post);
+
         return view('public.post.show', [
             "post" => $post
         ]);
@@ -42,6 +52,8 @@ class PostController extends Controller
 
     public function edit(Post $post)
     {
+        $this->authorize('update', $post);
+
         return view('admin.posts.edit', [
             "post" => $post,
             "categories" => Category::orderBy('name')->select('id', 'name')->get(),
@@ -52,24 +64,57 @@ class PostController extends Controller
 
     public function update(UpdatePostRequest $request, Post $post)
     {
+        $this->authorize('update', $post);
+
         $post->updatePostAndSyncTags($request);
-        return redirect()->route('admin.posts.edit', $post)->with('message', 'Los cambios fueron guardados!!!');;
+        return redirect()->route('admin.posts.edit', $post)->with([
+            'message' => 'Los datos fueron guardados con éxito!!!',
+            'title' => 'Post Actualizado',
+            'icon' => 'success'
+        ]);;
     }
 
     public function destroy(Post $post)
     {
-        $post->deletePost();
-        return redirect()->route('admin.posts.index')->with('message', 'El post ' . $post->title . ' fue eliminado con éxito!!!');
+        $this->authorize('delete', $post);
+
+        $post->delete();
+
+        return redirect()->route('admin.posts.index')->with([
+            'success' => true, 
+            'message' => 'El Post <strong>' . $post->title .'</strong> fue eliminado con éxito!!!',
+            'title' => 'Post Eliminado',
+            'icon' => 'success'
+        ]);
+    }
+
+    public function updateApproved(Post $post){
+        $this->authorize('update-approved', $post);
+
+        if ($post->validateApproval()) {
+            return redirect()->route('admin.posts.index')->with($post->updateApprovedOrDisapprove());
+        }
+
+        return redirect()->route('admin.posts.index')->with([
+            'success' => true, 
+            'title' => 'Error Ups',
+            'message' => 'El post que intenta Aprobar no tiene todos sus campos completos',
+            'icon' => 'error'
+        ]);
     }
 
     public function uploadImages(Post $post, Request $request){
+        $this->authorize('update', $post);
+
         return $post->images()->create([
             'url' => $request->file('image')->store('images') 
          ]);
     }
 
-    public function destroyImages(Image $image){
-        $image->deleteImage();
+    public function destroyImages(Post $post, Image $image){        
+        $this->authorize('update', $post);
+
+        $image->delete();
         return response()->json(['success' => true, 'session' => 'Imagen eliminada']);
     }
 }

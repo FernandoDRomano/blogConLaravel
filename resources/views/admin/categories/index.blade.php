@@ -6,10 +6,6 @@
     <link rel="stylesheet" href="/admin/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="/admin/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
     <link rel="stylesheet" href="/admin/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
-    <!-- SweetAlert2 -->
-    <link rel="stylesheet" href="/admin/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
-    <!-- Toastr -->
-    <link rel="stylesheet" href="/admin/plugins/toastr/toastr.min.css">
 @endpush
 
 @section('contentHeader')
@@ -22,9 +18,11 @@
         <div class="card-header">
             <div class="contenedor d-flex justify-content-between align-items-center">
                 <h3 class="h3 mb-0">Administración de Categorías</h3>
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-create">
-                    <i class="fas fa-plus-circle"></i> Nuevo
-                </button>
+                @can('create', $category)
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-create">
+                        <i class="fas fa-plus-circle"></i> Nuevo
+                    </button>
+                @endcan
             </div>
         </div>
         <div class="card-body">
@@ -63,7 +61,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="close" class="btn btn-outline-secondary " data-dismiss="modal">Close</button>
+                <button type="close" class="btn btn-outline-secondary " data-dismiss="modal">Cerrar</button>
                 <button type="submit" class="btn btn-primary">Guardar</button>
             </div>
          </form>
@@ -97,40 +95,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="close" class="btn btn-outline-secondary " data-dismiss="modal">Close</button>
+                    <button type="close" class="btn btn-outline-secondary " data-dismiss="modal">Cerrar</button>
                     <button type="submit" class="btn btn-warning text-white">Actualizar</button>
-                </div>
-             </form>
-          </div>
-        </div>
-    </div>
-
-    <!-- Modal delete-->
-    <div class="modal fade" id="modal-delete" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header bg-danger">
-              <h5 class="modal-title text-white" id="exampleModalLabel">Eliminar Categoría</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            {{-- FORMULARIO --}}
-            <form id="form-delete" action="#" method="POST">
-                @csrf
-                @method('DELETE')
-
-                <div class="modal-body">
-                    <ul class="list-group mb-3 d-none" id="contentErrorsDelete"></ul>
-
-                    <input type="hidden" name="category">
-                    <p name="message" class="h4 text-center m-3"></p>
-                
-                </div>
-
-                <div class="modal-footer">
-                    <button type="close" class="btn btn-outline-secondary " data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-danger text-white">Eliminar</button>
                 </div>
              </form>
           </div>
@@ -151,11 +117,6 @@
     <script src="/admin/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
     <script src="/admin/plugins/datatables-buttons/js/buttons.print.min.js"></script>
     <script src="/admin/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
-
-    <!-- SweetAlert2 -->
-    <script src="/admin/plugins/sweetalert2/sweetalert2.min.js"></script>
-    <!-- Toastr -->
-    <script src="/admin/plugins/toastr/toastr.min.js"></script>
 
     <!-- Page specific script -->
     <script>
@@ -203,25 +164,12 @@
                     }
         });
 
-        const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 2500,
-            width: '50rem',
-            padding: '1rem',
-            timerProgressBar: true,
-        })
-
         const modalCreate = 'modal-create';
         const modalUpdate = 'modal-edit';
-        const modalDestroy = 'modal-delete';
         let formCreate = document.getElementById("form-create");
         let formUpdate = document.getElementById("form-edit");
-        let formDestroy = document.getElementById("form-delete");
         let contenedorCreate = document.getElementById('contentErrorsCreate')
         let contenedorEdit = document.getElementById('contentErrorsEdit')
-        let contenedorDelete = document.getElementById('contentErrorsDelete')
 
         async function getCategoryEdit(e){
             e.preventDefault();
@@ -244,16 +192,66 @@
             try {
                 const category = await getCategory(e);
                 
-                document.querySelector('#modal-delete p[name="message"]').innerHTML = `
-                    ¿Estás seguro de eliminar la categoría <strong class="text-danger">${category.name}</strong>?
-                `;
-
-                document.querySelector('#modal-delete input[name="category"]').value= category.url;
-
-                $('#modal-delete').modal('show');
+                showModalDeleteCategory(category);
 
             } catch (error) {
                 console.log(error)
+            }
+        }
+
+        function showModalDeleteCategory(category){
+            Swal.fire({
+                
+                title: 'Eliminar Categoría',
+                html: `
+                        ¿Estás seguro de eliminar la Categoría <strong class="text-danger">${category.name}</strong>?
+                        ${category.posts.length ? '<p class="mb-0 text-muted">Si lo eliminas ' + category.posts.length + ' Post quedarán sin esta Categoría.</p>' : ''}
+                    `,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Si, Eliminar!',
+                cancelButtonText: 'Cerrar',
+                buttonsStyling:false,
+                customClass: {
+                    confirmButton: 'btn btn-danger text-white mr-2',
+                    cancelButton: 'btn btn-outline-secondary'
+                },
+
+                }).then((confirmation) => {
+
+                    if (confirmation.value) {
+                        destroyCategory(category);
+                    }
+
+            })
+        }
+
+        async function destroyCategory(category) {
+            try {
+                let url = '/admin/categories/' + category.url
+
+                const config = getConfigFetch('DELETE')
+
+                const resp = await fetch(url, config)
+
+                if(resp.status === 403){
+                    Swal.fire({
+                        title: 'Ups Error',
+                        html: '<strong>No tienes permisos para realizar esta acción</strong>',
+                        icon: 'error',
+                        confirmButtonText: 'Cerrar'
+                    })
+                    return;
+                }
+
+                const datos = await resp.json();
+
+                if(datos.success){
+                    successActionCategory(datos, null)
+                }
+
+            } catch (error) {
+                console.error(error);
             }
         }
 
@@ -299,7 +297,7 @@
                 const datos = await resp.json();    
 
                 if(datos.success){
-                    successAction(datos.session, modalCreate)
+                    successActionCategory(datos, modalCreate)
                 }else{
                     showErrors(datos.errors, contenedorCreate);
                 }
@@ -326,10 +324,16 @@
                 const config = getConfigFetch('PUT', data)
 
                 const resp = await fetch(url, config)
+
+                if(resp.status === 403){
+                    showErrors({Error: 'No tienes permisos para realizar esta acción'}, contenedorEdit);
+                    return;
+                }
+                
                 const datos = await resp.json();
 
                 if(datos.success){
-                    successAction(datos.session, modalUpdate)
+                    successActionCategory(datos, modalUpdate)
                 }else{
                     showErrors(datos.errors, contenedorEdit);
                 } 
@@ -338,37 +342,6 @@
                 console.error(error);
             }
 
-        }
-
-        formDestroy.addEventListener('submit', e => {
-            e.preventDefault();
-            const category = document.querySelector('#modal-delete input[name="category"]').value;
-
-            destroyCategory(category);
-        })
-
-        async function destroyCategory(category) {
-            try {
-                let url = '/admin/categories/' + category     
-
-                const config = getConfigFetch('DELETE')
-
-                const resp = await fetch(url, config)
-                const datos = await resp.json();
-
-                if(datos.success){
-                    successAction(datos.session, modalDestroy)
-                }else{
-                    let errors = {
-                        Error: 'Se produjo un error inesperado en el sistema, y no se pudo eliminar'
-                    }
-
-                    showErrors(errors, contenedorDelete);
-                }
-
-            } catch (error) {
-                console.error(error);
-            }
         }
 
         function getConfigFetch(method, data =  null){
@@ -385,11 +358,10 @@
             }
         }
 
-        function successAction(message, modal){
-            clearInputsModal(modal);
+        function successActionCategory(datos, modal){
             closeModal(modal);
             reloadTableAjax();
-            showMessageSession(message);
+            showMessageSessionCategory(datos);
         }
 
         function closeModal(modal){
@@ -402,6 +374,7 @@
 
         function clearInputsModal(modal){
             const inputsText = document.querySelectorAll(`#${modal} input[type="text"]`);
+            console.log(inputsText);
             for (let i = 0; i < inputsText.length; i++) {
                 inputsText[i].value = '';
             }
@@ -422,26 +395,28 @@
             contenedor.classList.remove('d-none');
         }
 
-        function showMessageSession(message){
+        function showMessageSessionCategory(datos){
 
-            Toast.fire({
-                icon: 'success',
-                title: `${message}`,
+            Swal.fire({
+              title: datos.title,
+              html: datos.message,
+              icon: datos.icon,
+              confirmButtonText: 'Cerrar'
             })
 
         }
 
         $("#modal-create").on('hidden.bs.modal', function () {
             contenedorCreate.classList.add('d-none');
-            clearInputsModal(modalCreate);
+
+            const inputsText = document.querySelectorAll(`#modal-create input[type="text"]`);
+            for (let i = 0; i < inputsText.length; i++) {
+                inputsText[i].value = '';
+            }
         });
 
         $("#modal-edit").on('hidden.bs.modal', function () {
             contenedorEdit.classList.add('d-none');
-        });
-
-        $("#modal-delete").on('hidden.bs.modal', function () {
-            contenedorDelete.classList.add('d-none');
         });
 
 

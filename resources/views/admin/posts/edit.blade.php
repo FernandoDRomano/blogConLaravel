@@ -17,16 +17,7 @@
 
 @section('content')
 
-@if ($errors->any())
-    <div class="alert alert-danger mt-3">
-        <ul class="mb-0">
-            <h5 class="text-uppercase">Existén errores en los datos enviados, revise por favor.</h5>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
+ 
 
 <form action="{{ route('admin.posts.update', $post) }}" method="POST" class="my-3">
 
@@ -46,8 +37,8 @@
         <div class="card-body">
           <div class="row">
               {{-- PRIMERA COLUMNA --}}
-              <div class="col-lg-6 col-xl-7">
-                <div class="card card-info card-outline">
+              <div class="col-lg-6 col-xl-7 mb-3 mb-lg-0">
+                <div class="card card-info card-outline h-100">
                     <div class="card-header">
                       <h5 class="card-title">Contenido</h5>
                     </div>
@@ -96,7 +87,7 @@
               </div>
 
               {{-- SEGUNDA COLUMNA --}}
-              <div class="col-lg-6 col-xl-5">
+              <div class="col-lg-6 col-xl-5 d-flex flex-column justify-content-between">
                   
                     <div class="card card-info card-outline">
                       <div class="card-header">
@@ -212,7 +203,7 @@
                   </div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group mb-0">
                     <div class="row">
                         <div class="col-xl-8 mb-2 mb-xl-0">
                             <button type="submit" class="btn btn-primary btn-block text-uppercase">Guardar cambios</button>
@@ -253,15 +244,15 @@
         </div>
           <div class="card-body">
               <div class="row">
-                  <div class="col-lg-5">
+                  <div class="col-lg-5 mb-3 mb-lg-0">
 
                     
-                    <div class="card card-info card-outline">
+                    <div class="card card-info card-outline h-100">
                         <div class="card-header">
-                        <h5 class="card-title">Subir Imagenes</h5>
+                            <h5 class="card-title">Subir Imagenes</h5>
                         </div>
                         <div class="card-body">
-                            <div class="dropzone border-info lead rounded"></div>
+                            <div class="h-100 dropzone border-info lead rounded"></div>
                         </div>
                     </div>
 
@@ -269,7 +260,7 @@
                   </div>
                   <div class="col-lg-7">
 
-                    <div class="card card-info card-outline">
+                    <div class="card card-info card-outline h-100">
                         <div class="card-header">
                           <h5 class="card-title">Imagenes Subidas</h5>
                         </div>
@@ -294,43 +285,6 @@
                   </div>
               </div>
           </div>
-</div>
-
-
-<!-- Modal delete-->
-<div class="modal fade" id="modal-delete" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header bg-danger">
-          <h5 class="modal-title text-white" id="exampleModalLabel">Eliminar Imagén</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        {{-- FORMULARIO --}}
-        <form id="form-delete" action="#" method="POST">
-            @csrf
-            @method('DELETE')
-
-            <div class="modal-body">
-                <ul class="list-group mb-3 d-none" id="contentErrorsDelete"></ul>
-
-                <input type="hidden" name="image">
-                <p name="message" class="h4 text-center m-3"></p>
-
-                <div class="text-center">
-                    <img src="" alt="" class="img-fluid">
-                </div>
-            
-            </div>
-
-            <div class="modal-footer">
-                <button type="close" class="btn btn-outline-secondary " data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-danger text-white">Eliminar</button>
-            </div>
-         </form>
-      </div>
-    </div>
 </div>
 
 @endsection
@@ -434,18 +388,70 @@
             try {
                 const image = await getImage(e);
                 
-                document.querySelector('#modal-delete p[name="message"]').innerHTML = `
-                    ¿Estás seguro de eliminar esta imagén?
-                `;
-
-                document.querySelector('#modal-delete input[name="image"]').value= image.id;
-                document.querySelector('#modal-delete img').src = `/storage/${image.url}`;
-
-                $('#modal-delete').modal('show');
+                showModalDeleteImage(image);
 
             } catch (error) {
                 console.log(error)
             } 
+        }
+
+        function showModalDeleteImage(image){
+            Swal.fire({
+                
+                title: 'Eliminar Imagen',
+                html: `
+                        ¿Estás seguro de eliminar esta imagén?
+                    `,
+                icon: 'warning',
+                imageUrl: `/storage/${image.url}`,
+                imageWidth: 400,
+                imageHeight: 300,
+                imageAlt: 'Custom image',
+                showCancelButton: true,
+                confirmButtonText: 'Si, Eliminar!',
+                cancelButtonText: 'Cerrar',
+                buttonsStyling:false,
+                customClass: {
+                    confirmButton: 'btn btn-danger text-white mr-2',
+                    cancelButton: 'btn btn-outline-secondary'
+                },
+
+                }).then((confirmation) => {
+
+                    if (confirmation.value) {
+                        destroyImage(image);
+                    }
+
+            })
+        }
+
+        async function destroyImage(image) {
+            try {
+                let url = `/admin/posts/${image.post.url}/images/${image.id}`;
+
+                const config = getConfigFetch('DELETE')
+
+                const resp = await fetch(url, config)
+
+                if(resp.status === 403){
+                    Swal.fire({
+                        title: 'Ups Error',
+                        html: '<strong>No tienes permisos para realizar esta acción</strong>',
+                        icon: 'error',
+                        confirmButtonText: 'Cerrar'
+                    })
+                    return;
+                }
+
+                const datos = await resp.json();
+
+                if(datos.success){
+                    deleteImageDOM(image.id);
+                }
+
+            } catch (error) {
+                console.error(error);
+            }
         }
 
         async function getImage(e){
@@ -473,33 +479,6 @@
         }
 
         const formDelete = document.getElementById('form-delete');
-        
-        formDelete.addEventListener('submit', e => {
-            e.preventDefault();
-            const image = document.querySelector('#modal-delete input[name="image"]').value;
-
-            deleteImage(image);
-        });
-
-        async function deleteImage(image){
-            try {
-
-                const elemento = event.target;
-                const config = getConfigFetch('DELETE');
-                const url = `/admin/posts/images/${image}`;
-
-                const resp = await fetch(url, config);
-                const data = await resp.json();
-
-                if(data.success){
-                    deleteImageDOM(image);
-                    $(`#modal-delete`).modal('hide');
-                }
-
-            } catch (error) {
-                console.log(error);
-            }
-        }
 
         function deleteImageDOM(idImage){
 

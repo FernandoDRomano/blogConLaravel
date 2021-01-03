@@ -20,12 +20,4 @@ class Image extends Model
         return $this->belongsTo(Post::class);
     }
 
-    /* 
-        OTROS METODOS
-    */
-
-    public function deleteImage(){
-        Storage::delete($this->url);
-        $this->delete();
-    }
 }

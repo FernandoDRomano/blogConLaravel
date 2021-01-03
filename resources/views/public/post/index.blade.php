@@ -27,9 +27,15 @@
 						<div class="date">
 							<span class="c-gray-1">{{$post->published_at->diffForHumans()}}</span>
 						</div>
-						<div class="post-category">
-							<a href="{{ route('pages.category.show.posts', $post->category) }}" class="category text-capitalize">{{ $post->category->name }}</a>
-						</div>
+						@if ($post->category)	
+							<div class="post-category">
+								<a href="{{ route('pages.category.show.posts', $post->category) }}" class="category text-capitalize">{{ $post->category->name }}</a>
+							</div>
+						@else
+							<div class="post-category">
+								<a href="#" class="category text-capitalize">Sin Categoría</a>
+							</div>
+						@endif
 					</header>
 					<h1> {{ $post->title }} </h1>
 					<div class="divider"></div>

@@ -77,37 +77,10 @@
         <!-- /.card-body -->
   </div>
 
-<!-- Modal delete-->
-<div class="modal fade" id="modal-delete" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header bg-danger">
-          <h5 class="modal-title text-white" id="exampleModalLabel">Eliminar Role</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        {{-- FORMULARIO --}}
-        <form id="form-delete" action="#" method="POST">
-            @csrf
-            @method('DELETE')
-
-            <div class="modal-body">
-                <ul class="list-group mb-3 d-none" id="contentErrorsDelete"></ul>
-
-                <input type="hidden" name="role">
-                <p name="message" class="h4 text-center m-3"></p>
-            
-            </div>
-
-            <div class="modal-footer">
-                <button type="close" class="btn btn-outline-secondary " data-dismiss="modal">Cerrar</button>
-                <button type="submit" class="btn btn-danger text-white">Eliminar</button>
-            </div>
-         </form>
-      </div>
-    </div>
-</div>
+<form class="d-none" method="POST" id="delete-role">
+    @csrf
+    @method('DELETE')
+ </form>
 
 @endsection
 
@@ -165,13 +138,7 @@
             try {
                 const role = await getRole(e);
                 
-                document.querySelector('#modal-delete p[name="message"]').innerHTML = `
-                    ¿Estás seguro de eliminar el Role <strong class="text-danger">${role.display_name}</strong>?
-                `;
-
-                document.querySelector('#modal-delete input[name="role"]').value= role.id;
-
-                $('#modal-delete').modal('show');
+                showModalDeleteRole(role);
 
             } catch (error) {
                 console.log(error)
@@ -201,12 +168,35 @@
             }
         }
 
-        formDestroy.addEventListener('submit', e => {
-            e.preventDefault();
-            const role = document.querySelector('#modal-delete input[name="role"]').value;
-            formDestroy.setAttribute('action', `/admin/roles/${role}`)
-            formDestroy.submit();
-        })
+        function showModalDeleteRole(role){
+            Swal.fire({
+                
+                title: 'Eliminar Role',
+                html: `¿Estás seguro de eliminar el Role <strong class="text-danger">${role.display_name}</strong>?` ,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Si, Eliminar!',
+                cancelButtonText: 'Cerrar',
+                buttonsStyling:false,
+                customClass: {
+                    confirmButton: 'btn btn-danger text-white mr-2',
+                    cancelButton: 'btn btn-outline-secondary'
+                },
+
+                }).then((confirmation) => {
+
+                    if (confirmation.value) {
+                        deleteRole(role);
+                    }
+
+            })
+        }
+
+        function deleteRole(role){
+            form = document.getElementById('delete-role');
+            form.setAttribute('action', `/admin/roles/${role.id}`);
+            form.submit();
+        }
 
         function getConfigFetch(method, data =  null){
             return {
