@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Tag;
 use App\Post;
 use App\Image;
+use App\Comment;
 use App\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -46,7 +47,9 @@ class PostController extends Controller
         $this->authorize('show', $post);
 
         return view('public.post.show', [
-            "post" => $post
+            "post" => $post,
+            "comments" => $post->comments,
+            "comment" => new Comment
         ]);
     }
 

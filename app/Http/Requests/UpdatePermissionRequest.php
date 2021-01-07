@@ -24,8 +24,19 @@ class UpdatePermissionRequest extends FormRequest
     public function rules()
     {
         return [
-            'guard_name' => 'required|min:3|max:60',
+            'display_name' => 'required|min:3|max:60',
             'description' => 'sometimes|nullable|min:3|max:500'
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'display_name.required' => 'El nombre del permiso es obligatorio',
+            'display_name.min' => 'El nombre del permiso debe tener como mínimo 3 caracteres',
+            'display_name.max' => 'El nombre del permiso debe tener como máximo 255 caracteres',
+            'description.min' => 'La descripción del permiso debe tener como mínimo 3 caracteres',
+            'description.max' => 'La descripción del permiso debe tener como máximo 255 caracteres',
         ];
     }
 }
