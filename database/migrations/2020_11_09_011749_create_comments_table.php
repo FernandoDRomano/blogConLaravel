@@ -17,6 +17,8 @@ class CreateCommentsTable extends Migration
             $table->bigIncrements('id');
             $table->text('body');
 
+            $table->boolean('approved')->default(false);
+
             /* LLAVES FORANEAS */
             $table->unsignedBigInteger('post_id');
             $table->foreign('post_id')->references('id')->on('posts')->onDelete('cascade');
@@ -24,8 +26,8 @@ class CreateCommentsTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
-            $table->unsignedBigInteger('comment_id')->nullable();
-            $table->foreign('comment_id')->references('id')->on('comments')->onDelete('cascade');
+            $table->unsignedBigInteger('parent_comment_id')->nullable();
+            $table->foreign('parent_comment_id')->references('id')->on('comments')->onDelete('cascade');
 
             $table->timestamps();
         });

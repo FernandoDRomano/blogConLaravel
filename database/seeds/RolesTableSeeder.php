@@ -80,5 +80,10 @@ class RolesTableSeeder extends Seeder
         ]);
 
         $subscriber->assignRole($roleSubscriber);
+
+        $writter->givePermissionTo('Create Comments');
+        $moderator->givePermissionTo('Create Comments');
+        $subscriber->givePermissionTo('Create Comments');
+
     }
 }

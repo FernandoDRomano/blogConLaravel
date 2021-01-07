@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class Comment extends Model
 {
     protected $fillable = [
-        'body', 'user_id', 'post_id', 'comment_id'
+        'body', 'user_id', 'post_id', 'parent_comment_id'
     ];
 
     /* 
@@ -25,6 +25,19 @@ class Comment extends Model
     }
 
     public function childs(){
-        return $this->hasMany(Comment::class);
+        return $this->hasMany(Comment::class, 'parent_comment_id');
     }
+
+    public function parent(){
+        return $this->belongsTo(Comment::class, 'parent_comment_id');
+    }
+
+    /* 
+        METODOS
+    */
+
+    public function isFather(){
+        return !$this->parent_comment_id ? true : false;
+    }
+
 }

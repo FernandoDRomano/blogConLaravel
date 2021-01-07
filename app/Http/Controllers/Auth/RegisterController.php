@@ -73,6 +73,7 @@ class RegisterController extends Controller
         ]);
 
         $user->assignRole('Subscriber');
+        $user->givePermissionTo('Create Comments');
     
         return $user;
     }

@@ -128,9 +128,9 @@
                 </a>
                 <ul class="nav nav-treeview ml-1 ml-lg-2" style="display: none;">
                   <li class="nav-item">
-                    <a href="#" class="nav-link">
-                      <i class="fas fa-eye nav-icon"></i>
-                      <p>Ver Comentarios</p>
+                    <a href="{{route('admin.comments.index')}}" class="nav-link">
+                      <i class="fas fa-bars nav-icon"></i>
+                      <p>Gestionar Comentarios</p>
                     </a>
                   </li>                   
                 </ul>

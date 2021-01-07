@@ -60,7 +60,15 @@ Route::group(
         Route::put('users/{user}/profile', 'UserController@updateProfile')->name('admin.users.profile.update');
         Route::put('users/{user}/password', 'UserController@updatePassword')->name('admin.users.password');
 
+        /* COMMENTS */
+        Route::resource('comments', 'CommentController', ['as' => 'admin', 'except' => ['create', 'edit', 'show', 'update', 'store']]);
+        Route::put('comments/{comment}/approved', 'CommentController@updateApproved')->name('admin.comments.update.approved');
+
 });
+
+/* COMMENTS ROUTES PUBLIC */
+Route::get('admin/comments/get/{comment}', 'Admin\CommentController@getComment')->middleware('auth')->name('admin.comments.get');
+Route::post('admin/comments', 'Admin\CommentController@store')->middleware('auth')->name('admin.comments.store');
 
 
 Auth::routes();
