@@ -3,7 +3,7 @@
     <div class="row w-75 align-items-center">
         <input type="hidden" name="post_id" value="{{$post->id}}">
         <div class="col-2 h-100">
-            <img src="{{ auth()->user()->photo }}" alt="" class="img-fluid rounded-circle" style="height: 75px; width: 75px;">
+            <img src="{{ current_user()->photo }}" alt="" class="img-fluid rounded-circle" style="height: 75px; width: 75px;">
         </div>
         <div class="col-9 h-100 px-0">
             <div class="form-group mb-0">

@@ -9,8 +9,8 @@ class CommentObserver
 
     public function creating(Comment $comment)
     {
-        if (auth()->user()) {
-            $comment->user_id = auth()->user()->id;
+        if (current_user()) {
+            $comment->user_id = current_user()->id;
         }
     }
 

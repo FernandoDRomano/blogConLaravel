@@ -92,11 +92,14 @@ class Post extends Model
     }
 
     public function scopeOwner($query){
-        if(auth()->user()->hasRole('Admin') || auth()->user()->hasRole('Moderator') || auth()->user()->hasPermissionTo('View Posts')){
+        if(current_user()->hasRole('Admin') 
+        || current_user()->hasRole('Moderator') 
+        || (current_user()->hasPermissionTo('View Posts') && !current_user()->hasRole('Writter'))){
+
             return $query;
         }
 
-        return $query->where('user_id', '=' , auth()->user()->id);
+        return $query->where('user_id', '=' , current_user()->id);
     }
 
     public function isVisibled(){

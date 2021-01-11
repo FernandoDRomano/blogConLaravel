@@ -1,7 +1,7 @@
 <div class="row justify-content-center">
 
     <div class="col-xl-5">
-        <div class="card card-info card-outline">
+        <div class="card card-info card-outline h-100">
             <div class="card-header">
                 <h5 class="card-title">Datos del Role</h5>
             </div>
@@ -54,31 +54,23 @@
     </div>{{-- .col-xl-5 --}}
 
     <div class="col-xl-7">
-        <div class="card card-info card-outline">
+        <div class="card card-info card-outline h-100">
             <div class="card-header">
                 <h5 class="card-title">Permisos del Role</h5>
             </div>
             <div class="card-body">
-                <div class="row">
-                    @forelse ($permissions as $permission)
-                        <div class="col-12 col-sm-6 col-md-4 col-lg-4">
-                            <div class="checkbox">
-                                <label>
-                                    <input name="permissions[]" type="checkbox" value="{{ $permission->name }}"
-                                        {{ $role->permissions->contains($permission->id) || collect( old('permissions') )->contains($permission->name) ? 'checked': '' }}
-                                    > {{ $permission->display_name }}
-                                </label>
-                            </div>
-                        </div>
-                    @empty
-                        no hay nada
-                    @endforelse
-                </div>
+
+                @if ($role->name === 'Writter' || $role->name === 'Moderator' || $role->name === 'Subscriber')
+                    @include('admin.roles._permissionsOfRole')
+                @else
+                    @include('admin.roles._permissionAll', ['permissions' => $permissions])
+                @endif
+
             </div>
         </div>
     </div>{{-- col-xl-7 --}}
 
-    <div class="col-lg-8">
+    <div class="col-lg-8 mt-3">
         <div class="row">
             <div class="col-md-6 col-xl-8">
                 <button type="submit" class="btn btn-primary btn-block text-uppercase">Guardar Role</button>

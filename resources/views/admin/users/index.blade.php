@@ -89,37 +89,6 @@
      @method('DELETE')
   </form>
 
-<!-- Modal delete-->
-{{-- <div class="modal fade" id="modal-delete" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header bg-danger">
-          <h5 class="modal-title text-white" id="exampleModalLabel">Eliminar Usuario</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <form id="form-delete" action="#" method="POST">
-            @csrf
-            @method('DELETE')
-
-            <div class="modal-body">
-                <ul class="list-group mb-3 d-none" id="contentErrorsDelete"></ul>
-
-                <input type="hidden" name="user">
-                <p name="message" class="h4 text-center m-3"></p>
-            
-            </div>
-
-            <div class="modal-footer">
-                <button type="close" class="btn btn-outline-secondary " data-dismiss="modal">Cerrar</button>
-                <button type="submit" class="btn btn-danger text-white">Eliminar</button>
-            </div>
-         </form>
-      </div>
-    </div>
-</div> --}}
-
 @endsection
 
 @push('script')
@@ -166,28 +135,6 @@
                         "infoFiltered": ""
                     }
         });
-
-        // const modalDestroy = 'modal-delete';
-        // let formDestroy = document.getElementById("form-delete");
-        // let contenedorDelete = document.getElementById('contentErrorsDelete')
-
-        // async function getUserDelete(e) {
-        //     e.preventDefault();
-        //     try {
-        //         const user = await getUser(e);
-                
-        //         document.querySelector('#modal-delete p[name="message"]').innerHTML = `
-        //             ¿Estás seguro de eliminar el Usuario <strong class="text-danger">${user.last_name}, ${user.name}</strong>?
-        //         `;
-
-        //         document.querySelector('#modal-delete input[name="user"]').value= user.id;
-
-        //         $('#modal-delete').modal('show');
-
-        //     } catch (error) {
-        //         console.log(error)
-        //     }
-        // }
 
         async function getUserDelete(e) {
             e.preventDefault();
@@ -256,13 +203,6 @@
             form.setAttribute('action', `/admin/users/${user.id}`);
             form.submit();
         }
-
-        // formDestroy.addEventListener('submit', e => {
-        //     e.preventDefault();
-        //     const user = document.querySelector('#modal-delete input[name="user"]').value;
-        //     formDestroy.setAttribute('action', `/admin/users/${user}`)
-        //     formDestroy.submit();
-        // })
 
         function getConfigFetch(method, data =  null){
             return {

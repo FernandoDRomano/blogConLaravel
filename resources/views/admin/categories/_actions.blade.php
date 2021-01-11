@@ -1,4 +1,4 @@
-@if (auth()->user()->hasPermissionTo('Update Categories') || auth()->user()->hasRole('Admin'))
+@if (current_user()->hasPermissionTo('Update Categories') || current_user()->hasRole('Admin'))
     <a 
         href="{{ route('admin.categories.get', $url) }}" 
         class="btn btn-warning text-white btn-sm"
@@ -9,7 +9,7 @@
 @endif
 
 
-@if (auth()->user()->hasPermissionTo('Delete Categories') || auth()->user()->hasRole('Admin'))
+@if (current_user()->hasPermissionTo('Delete Categories') || current_user()->hasRole('Admin'))
     <a 
         href="{{ route('admin.categories.get', $url) }}" 
         class="btn btn-danger btn-sm"

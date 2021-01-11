@@ -48,6 +48,7 @@ class RolePolicy
         {
             $this->deny('No se puede editar este role');
         }
+        
         return $user->hasRole('Admin') || $user->hasPermissionTo('Update Roles');
     }
 

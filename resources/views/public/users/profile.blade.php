@@ -1,34 +1,22 @@
-@extends('admin.layout')
+@extends('layout')
 
-@section('title', 'Perfil de Usuario')
+@section('title', 'Perfil de ' . $user->getFullName())
 
 @section('content')
 
-<div class="row justify-content-center">
-    <div class="col-12 mt-3">
-        <div class="card card-row card-info">
-
-            <div class="bg-info py-2 px-3 d-flex align-items-center justify-content-between">
-                <h3 class="card-title lea mr-2 d-block">
-                Perfil de Usuario
-                </h3>
-                <a href="{{ route('admin.users.profile', $user) }}" class="d-block link-muted ml-2 text-bold p-0">
-                    <i class="fas fa-reply"></i>
-                    Volver
-                </a>
-            </div>
+<section class="pages container">
+    <div class="page">
+        <form action="{{ route('subscriber.profile.update', $user) }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            @method('PUT')
 
             <div class="card-body">
 
-                <form action="{{ route('admin.users.profile.update', $user) }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    @method('PUT')
-
                     <div class="row justify-content-center align-content-between">
 
-                        <div class="col-xl-9">
+                        <div class="col-xl-7">
 
-                            <div class="card card-info card-outline">
+                            <div class="card card-blog card-outline">
                                 <div class="card-header">
                                     <h5 class="card-title">Datos del Usuario</h5>
                                 </div>
@@ -69,7 +57,7 @@
                                 </div>
                             </div>
 
-                            <div class="card card-info card-outline mb-xl-0">
+                            <div class="card card-blog card-outline mb-xl-0">
                                 <div class="card-header">
                                     <h5 class="card-title">Cambiar Contraseña</h5>
                                 </div>
@@ -98,9 +86,9 @@
 
                         </div>{{-- .col-xl-9 --}}
 
-                        <div class="col-xl-3">
+                        <div class="col-xl-5">
 
-                            <div class="card card-info card-outline h-100">
+                            <div class="card card-blog card-outline h-100">
                                 <div class="card-header">
                                     <h5 class="card-title">Foto de Perfil</h5>
                                 </div>
@@ -122,7 +110,7 @@
                         <div class="col-lg-8 mt-3">
                             <div class="row">
                                 <div class="col-md-6 col-xl-8">
-                                    <button type="submit" class="btn btn-primary btn-block text-uppercase">Actualizar Usuario</button>
+                                    <button type="submit" class="btn btn-blog btn-block text-uppercase">Actualizar Perfil</button>
                                 </div>
                                 <div class="col-md-6 col-xl-4">
                                     <a href="{{ route('admin.users.show', $user) }}" class="btn btn-outline-dark mt-2 mt-md-0 btn-block text-uppercase">Volver</a>
@@ -132,13 +120,12 @@
                     
                     </div>{{-- .row --}}
 
-                </form>{{-- formulario --}}
             
             </div>{{-- .card-body --}}
 
-        </div>
+        </form>
     </div>
-</div>
+</section>
 
 @endsection
 
@@ -176,5 +163,3 @@
 
     </script>
 @endpush
-
-

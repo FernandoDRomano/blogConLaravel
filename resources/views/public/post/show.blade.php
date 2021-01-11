@@ -4,11 +4,6 @@
 
 @section('content')
 
-@push('style')
-  <!-- Theme style -->
-  <link rel="stylesheet" href="/admin/css/adminlte.min.css">
-@endpush
-
 <section class="pages container mb-5">
 
     @includeIf($post->typeViewImageOrCarousel(), ["post" => $post,  "marginNegative" => "margin-negative"])

@@ -94,11 +94,11 @@
                                                 <img 
                                                     class="img-fluid rounded-circle"
                                                     style="height: 120px;"
-                                                    src="/admin/img/avatar5.png" 
+                                                    src="{{ $user->photo }}" 
                                                     alt="{{ $user->name }}">
                                                 <p>
-                                                    <a href="#" class="font-weight-bolder text-black-50">
-                                                        {{ $user->name }}, {{ $user->last_name }}
+                                                    <a href="{{ route('admin.users.show', $user) }}" class="font-weight-bolder text-black-50">
+                                                        {{ $user->getFullName() }}
                                                     </a>
                                                 </p>
                                             </div>

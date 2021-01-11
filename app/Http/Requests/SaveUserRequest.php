@@ -55,7 +55,8 @@ class SaveUserRequest extends FormRequest
                 'nullable',
                 'image',
                 'max:2048',
-                Rule::dimensions()->maxWidth(2000)->maxHeight(2000)->ratio(1 / 1),
+                //Rule::dimensions()->maxWidth(2000)->maxHeight(2000)->ratio(1 / 1),
+                Rule::dimensions()->maxWidth(2000)->maxHeight(2000),
             ],
             'email' => [
                 'required',

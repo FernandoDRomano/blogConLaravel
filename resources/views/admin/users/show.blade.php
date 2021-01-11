@@ -47,12 +47,12 @@
                                     @endif
 
                                     <li class="list-group-item">
-                                        <i class="fas fa-comments mr-1"></i><strong>Comentarios: </strong> <a href="#">{{$user->comments->count()}}</a>
+                                        <i class="fas fa-comments mr-1"></i><strong>Comentarios: </strong> {{$user->comments->count()}}
                                     </li>
                                 </ul>
 
                                 @can('updateProfile', $user)
-                                    <a href="{{route('admin.users.profile', $user)}}" class="btn btn-primary btn-block text-uppercase">Editar Perfil</a>
+                                    <a href="{{route('admin.users.profile.edit', $user)}}" class="btn btn-primary btn-block text-uppercase">Editar Perfil</a>
                                 @endcan
 
                             </div>

@@ -14,7 +14,7 @@
     @if ($errors->any())
         let template = '';
         @foreach($errors->all() as $message)
-            template += '<p class="text-danger">{{$message}}</p>'
+            template += '<p class="text-danger mb-0">{{$message}}</p>'
         @endforeach
 
         console.log(template);
