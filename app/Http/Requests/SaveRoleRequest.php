@@ -72,4 +72,20 @@ class SaveRoleRequest extends FormRequest
 
     //     return $rules;
     // }
+
+    public function messages()
+    {
+        return [
+            'name.required' => 'El identificador del permiso es obligatorio',
+            'name.min' => 'El identificador del permiso debe tener como mínimo 3 caracteres',
+            'name.max' => 'El identificador del permiso debe tener como máximo 60 caracteres',
+            'name.unique' => 'El identificador ya se encuentra utilizado',
+            'display_name.required' => 'El nombre del permiso es obligatorio',
+            'display_name.min' => 'El nombre del permiso debe tener como mínimo 3 caracteres',
+            'display_name.max' => 'El nombre del permiso debe tener como máximo 60 caracteres',
+            'display_name.unique' => 'El nombre ya se encuentra utilizado',
+            'description.min' => 'La descripción del permiso debe tener como mínimo 3 caracteres',
+            'description.max' => 'La descripción del permiso debe tener como máximo 255 caracteres',
+        ];
+    }
 }

@@ -9,7 +9,7 @@
           </button>
         </div>
         {{-- FORMULARIO --}}
-        <form id="form-change-password" action="{{ route('admin.users.password', auth()->user()) }}" method="POST">
+        <form id="form-change-password" action="{{ route('admin.users.password', current_user()) }}" method="POST">
             @csrf
             @method('PUT')
             

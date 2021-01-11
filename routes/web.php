@@ -22,7 +22,8 @@ Route::group(
     ['prefix' => 'admin', 'middleware' => ['auth', 'authorizedPersonalOnly'], 'namespace' => 'Admin']
     ,function () {
 
-        Route::view('home', 'admin.dashboard')->name('admin.dashboard');
+        //Route::view('home', 'admin.dashboard')->name('admin.dashboard');
+        Route::get('home', 'AdminController@show')->name('admin.dashboard');
         
         /* CATEGORIES */
         Route::get('categories/all', 'CategoryController@all')->name('admin.categories.all');
@@ -57,10 +58,23 @@ Route::group(
         Route::resource('users', 'UserController', ['as' => 'admin']);
         Route::get('users/get/{user}', 'UserController@getUser')->name('admin.users.get');
         Route::get('users/{user}/profile', 'UserController@profile')->name('admin.users.profile');
+        Route::get('users/{user}/profile/edit', 'UserController@editProfile')->name('admin.users.profile.edit');
         Route::put('users/{user}/profile', 'UserController@updateProfile')->name('admin.users.profile.update');
         Route::put('users/{user}/password', 'UserController@updatePassword')->name('admin.users.password');
 
+        /* COMMENTS */
+        Route::resource('comments', 'CommentController', ['as' => 'admin', 'except' => ['create', 'edit', 'show', 'update', 'store']]);
+        Route::put('comments/{comment}/approved', 'CommentController@updateApproved')->name('admin.comments.update.approved');
+
 });
+
+/* COMMENTS ROUTES PUBLIC */
+Route::get('admin/comments/get/{comment}', 'Admin\CommentController@getComment')->middleware('auth')->name('admin.comments.get');
+Route::post('admin/comments', 'Admin\CommentController@store')->middleware('auth')->name('admin.comments.store');
+
+/* USERS ROUTES PUBLIC */
+Route::get('users/{user}/profile', 'SubscriberController@edit')->middleware('auth')->name('subscriber.profile');
+Route::put('users/{user}/profile', 'SubscriberController@update')->middleware('auth')->name('subscriber.profile.update');
 
 
 Auth::routes();

@@ -11,7 +11,8 @@ class UserPolicy
 
     public function view(User $userAuth, User $userModel)
     {
-        return $userAuth->hasRole('Admin') || $userAuth->hasPermissionTo('View Users') || $userAuth->id === $userModel->id;
+        //return $userAuth->hasRole('Admin') || $userAuth->hasPermissionTo('View Users') || $userAuth->id === $userModel->id;
+        return $userAuth->hasRole('Admin') || $userAuth->hasPermissionTo('View Users');
     }
 
     public function create(User $userAuth)

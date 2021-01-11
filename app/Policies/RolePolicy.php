@@ -48,6 +48,7 @@ class RolePolicy
         {
             $this->deny('No se puede editar este role');
         }
+        
         return $user->hasRole('Admin') || $user->hasPermissionTo('Update Roles');
     }
 
@@ -60,7 +61,7 @@ class RolePolicy
      */
     public function delete(User $user, Role $role)
     {
-        if( $role->name === 'Admin' || $role->name === 'Subscriber')
+        if( $role->name === 'Admin' || $role->name === 'Subscriber' || $role->name === 'Writter' || $role->name === 'Moderator')
         {
             $this->deny('No se puede eliminar este role');
         }

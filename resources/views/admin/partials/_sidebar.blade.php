@@ -11,11 +11,11 @@
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
-          <img src="{{ auth()->user()->photo }}" class="img-circle elevation-2" alt="{{auth()->user()->getFullName()}}">
+          <img src="{{ current_user()->photo }}" class="img-circle elevation-2" alt="{{current_user()->getFullName()}}" style="height: 35px; width: 35px;" >
         </div>
         <div class="info">
           <p class="mb-0">
-            <a href="{{ route('admin.users.show', auth()->user() ) }}" class="">{{ auth()->user()->getFullName() }}</a>
+            <a href="{{ route('admin.users.profile', current_user() ) }}" class="">{{ current_user()->getFullName() }}</a>
           </p>
         </div>
       </div>
@@ -23,17 +23,16 @@
       <!-- Sidebar Menu -->
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-          <!-- Add icons to the links using the .nav-icon class
-               with font-awesome or any other icon font library -->
+          
           <li class="nav-item">
-            <a href="{{ route('admin.dashboard') }}" class="nav-link">
+            <a href="{{ route('admin.dashboard') }}" class="nav-link {{ isActive('admin.dashboard') }}">
               <i class="nav-icon fas fa-home"></i>
               <p>
                 Dashboard
               </p>
             </a>
           </li>
-
+  
           <li class="nav-item">
             <a href="{{ route('pages.blog') }}" class="nav-link"  target="_blank">
               <i class="nav-icon fas fa-globe"></i>
@@ -43,8 +42,7 @@
             </a>
           </li>
 
-          {{-- MENU ADMINISTRACIÓN --}}
-          <li class="nav-item">
+          <li class="nav-item has-treeview {{request()->routeIs('admin.dashboard') ? '' : 'menu-open'}}">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>
@@ -53,186 +51,108 @@
               </p>
             </a>
 
-            {{-- SUB MENU BLOG --}}
-            <ul class="nav nav-treeview ml-1 ml-lg-2" style="display: none;">
+            <ul class="nav nav-treeview">
+              
+              @can('view', $post)                
+                <li class="nav-item">
+                  <a href="{{route('admin.posts.index')}}" class="nav-link {{ isActive('admin.posts.*') }}">
+                    <i class="fas fa-book-open nav-icon"></i>
+                    <p>
+                      Blog
+                    </p>
+                  </a>
+                </li>
+              @endcan
+
+              @can('view', $category)                
+                <li class="nav-item">
+                  <a href="{{route('admin.categories.index')}}" class="nav-link {{ isActive('admin.categories.*') }}">
+                    <i class="fas fa-tags nav-icon"></i>
+                    <p>
+                      Categorías
+                    </p>
+                  </a>
+                </li>
+              @endcan
+
+              @can('view', $tag)                
+                <li class="nav-item">
+                  <a href="{{route('admin.tags.index')}}" class="nav-link {{ isActive('admin.tags.*') }}">
+                    <i class="fas fa-hashtag nav-icon"></i>
+                    <p>
+                      Etiquetas
+                    </p>
+                  </a>
+                </li>
+              @endcan
+
+              @can('view', $comment)                
+                <li class="nav-item">
+                  <a href="{{route('admin.comments.index')}}" class="nav-link {{ isActive('admin.comments.*') }}">
+                    <i class="fas fa-comments nav-icon"></i>
+                    <p>
+                      Comentarios
+                    </p>
+                  </a>
+                </li>
+              @endcan
+
+              @can('view', $user)                
+                <li class="nav-item">
+                  <a href="{{route('admin.users.index')}}" class="nav-link {{ isActive(['admin.users.index', 'admin.users.show', 'admin.users.create', 'admin.users.edit']) }}">
+                    <i class="fas fa-users nav-icon"></i>
+                    <p>
+                      Usuarios
+                    </p>
+                  </a>
+                </li>
+              @endcan
+              
+              @can('view', $role)                
+                <li class="nav-item">
+                  <a href="{{route('admin.roles.index')}}" class="nav-link {{ isActive('admin.roles.*') }}">
+                    <i class="fas fa-id-card-alt nav-icon"></i>
+                    <p>
+                      Roles
+                    </p>
+                  </a>
+                </li>
+              @endcan
+
+              @can('view', $permission)                
+                <li class="nav-item">
+                  <a href="{{route('admin.permissions.index')}}" class="nav-link {{ isActive('admin.permissions.*') }}">
+                    <i class="fas fa-code nav-icon"></i>
+                    <p>
+                      Permisos
+                    </p>
+                  </a>
+                </li>
+              @endcan
+
               <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="fas fa-book-open nav-icon"></i>
-                  <p>
-                    Blog
-                    <i class="right fas fa-angle-left"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview ml-1 ml-lg-2" style="display: none;">
-                  <li class="nav-item">
-                    <a href="{{ route('admin.posts.index') }}" class="nav-link">
-                      <i class="fas fa-bars nav-icon"></i>
-                      <p>Administrar posts</p>
-                    </a>
-                  </li>
-                </ul>
-              </li>
-            </ul>
-
-            {{-- SUB MENU CATEGORIAS --}}
-            <ul class="nav nav-treeview ml-1 ml-lg-2" style="display: none;">
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="fas fa-tags nav-icon"></i>
-                  <p>
-                    Categorías
-                    <i class="right fas fa-angle-left"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview ml-1 ml-lg-2" style="display: none;">
-                  <li class="nav-item">
-                    <a href="{{ route('admin.categories.index') }}" class="nav-link">
-                      <i class="fas fa-bars nav-icon"></i>
-                      <p>Administrar categorías</p>
-                    </a>
-                  </li>                         
-                </ul>
-              </li>
-            </ul>
-
-            {{-- SUB MENU ETIQUETAS --}}
-            <ul class="nav nav-treeview ml-1 ml-lg-2" style="display: none;">
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="fas fa-hashtag nav-icon"></i>
-                  <p>
-                    Etiquetas
-                    <i class="right fas fa-angle-left"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview ml-1 ml-lg-2" style="display: none;">
-                  <li class="nav-item">
-                    <a href="{{ route('admin.tags.index') }}" class="nav-link">
-                      <i class="fas fa-bars nav-icon"></i>
-                      <p>Administrar etiquetas</p>
-                    </a>
-                  </li>                    
-                </ul>
-              </li>
-            </ul>
-
-            {{-- SUB MENU COMENTARIOS --}}
-            <ul class="nav nav-treeview ml-1 ml-lg-2" style="display: none;">
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="fas fa-comments nav-icon"></i>
-                  <p>
-                    Comentarios
-                    <i class="right fas fa-angle-left"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview ml-1 ml-lg-2" style="display: none;">
-                  <li class="nav-item">
-                    <a href="#" class="nav-link">
-                      <i class="fas fa-eye nav-icon"></i>
-                      <p>Ver Comentarios</p>
-                    </a>
-                  </li>                   
-                </ul>
-              </li>
-            </ul>
-
-            {{-- SUB MENU USUARIOS --}}
-            <ul class="nav nav-treeview ml-1 ml-lg-2" style="display: none;">
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="fas fa-users nav-icon"></i>
-                  <p>
-                    Usuarios
-                    <i class="right fas fa-angle-left"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview ml-1 ml-lg-2" style="display: none;">
-                  <li class="nav-item">
-                    <a href="{{ route('admin.users.index') }}" class="nav-link">
-                      <i class="fas fa-bars nav-icon"></i>
-                      <p>Administrar Usuarios</p>
-                    </a>
-                  </li>               
-                </ul>
-              </li>
-            </ul>
-
-            {{-- SUB MENU ROLES --}}
-            <ul class="nav nav-treeview ml-1 ml-lg-2" style="display: none;">
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="fas fa-id-card-alt nav-icon"></i>
-                  <p>
-                    Roles
-                    <i class="right fas fa-angle-left"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview ml-1 ml-lg-2" style="display: none;">
-                  <li class="nav-item">
-                    <a href="{{route('admin.roles.index')}}" class="nav-link">
-                      <i class="fas fa-bars nav-icon"></i>
-                      <p>Administrar Roles</p>
-                    </a>
-                  </li>                
-                </ul>
-              </li>
-            </ul>
-
-            {{-- SUB MENU PERMISOS --}}
-            <ul class="nav nav-treeview ml-1 ml-lg-2" style="display: none;">
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="fas fa-code nav-icon"></i>
-                  <p>
-                    Permisos
-                    <i class="right fas fa-angle-left"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview ml-1 ml-lg-2" style="display: none;">
-                  <li class="nav-item">
-                    <a href="{{ route('admin.permissions.index') }}" class="nav-link">
-                      <i class="fas fa-eye nav-icon"></i>
-                      <p>Ver todos los Permisoss</p>
-                    </a>
-                  </li>                   
-                </ul>
-              </li>
-            </ul>
-
-
-          </li>{{-- FIN DEL MENU ADMINISTRACIÓN --}}
-
-          {{-- MENU CONFIGURACIÓN --}}
-          <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-cogs"></i>
-              <p>
-                Configuración
-                <i class="right fas fa-angle-left"></i>
-              </p>
-            </a>
-            {{-- SUB MENU CONFIGURACIÓN --}}
-            <ul class="nav nav-treeview ml-1 ml-lg-2" style="display: none;">
-              <li class="nav-item">
-                <a href="{{ route('admin.users.show', auth()->user()) }}" class="nav-link">
+                <a href="{{ route('admin.users.profile', current_user()) }}" class="nav-link {{ isActive(['admin.users.profile', 'admin.users.profile.edit']) }}">
                   <i class="fas fa-user-circle nav-icon"></i>
                   <p>Perfil</p>
                 </a>
               </li>
+
               <li class="nav-item">
                 <a href="#" class="nav-link" data-toggle="modal" data-target="#modal-change-password">
                   <i class="fas fa-user-lock nav-icon"></i>
                   <p>Cambiar Contraseña</p>
                 </a>
               </li>
+
               <li class="nav-item">
                 <a href="#" class="nav-link" onclick="document.getElementById('logout').submit()">
                   <i class="fas fa-sign-out-alt nav-icon"></i>
                   <p>Cerrar Sesión</p>
                 </a>
-              </li>      
+              </li>     
+              
             </ul>
+
           </li>
 
           <form id="logout" action="{{ route('logout') }}" method="POST" style="display: none">

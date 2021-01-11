@@ -14,8 +14,8 @@ class PostObserver
      */
     public function creating(Post $post)
     {
-        if (auth()->user()) {
-            $post->user_id = auth()->user()->id;
+        if (current_user()) {
+            $post->user_id = current_user()->id;
         }
     }
 

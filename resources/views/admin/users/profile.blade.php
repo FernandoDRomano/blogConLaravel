@@ -12,7 +12,7 @@
                 <h3 class="card-title lea mr-2 d-block">
                 Perfil de Usuario
                 </h3>
-                <a href="{{ route('admin.users.show', $user) }}" class="d-block link-muted ml-2 text-bold p-0">
+                <a href="{{ route('admin.users.profile', $user) }}" class="d-block link-muted ml-2 text-bold p-0">
                     <i class="fas fa-reply"></i>
                     Volver
                 </a>
@@ -109,9 +109,9 @@
                                     <div class="form-group text-center">
                                         <label for="photo" class="d-block">Foto de Perfíl</label>
                                         <img id="photoPreview" src="{{$user->photo}}" alt="Foto de perfil" class="img-fluid rounded-circle" style="height: 250px; width: 250px;">
-                                        <input type="file" name="photo" id="photo" class="d-none">
+                                        <input type="file" name="photo" id="photo" class="d-none" accept="image/*">
                                         <p class="text-black-50 mt-2 lead">Hacer click en la imagen para selecionar otra</p>
-                                        <p class="text-black-50 mb-0 mt-2 lead">La imagen debe tener una dimensión cuadrada. Además, debe tener un alto y un ancho máximo de 2000px</p>
+                                        <p class="text-black-50 mb-0 mt-2 lead">La imagen debe tener un alto y un ancho máximo de 2000px</p>
                                     </div>
 
                                 </div>

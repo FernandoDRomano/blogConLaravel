@@ -48,12 +48,28 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
+        $messagesCustom = [
+            'name.required' => 'El nombre es requerido',
+            'name.max' => 'El nombre debe tener como máximo 255 caracteres',
+            'name.string' => 'El nombre es debe ser una cadena de caracteres',
+            'last_name' => 'El apellido es requerido',
+            'last_name.max' => 'El apellido debe tener como máximo 255 caracteres',
+            'last_name.string' => 'El apellido es debe ser una cadena de caracteres',
+            'email.required' => 'El email es requerido',
+            'email.max' => 'El email debe tener como máximo 255 caracteres',
+            'email.email' => 'El email no tiene un formato válido',
+            'email.unique' => 'Este email ya se encuentra registrado en nuestros servidores',
+            'password.required' => 'La contraseña es requerida',
+            'password.min' => 'La contraseña debe tener como mínimo 8 caracteres',
+            'password.confirmed' => 'Las contraseñas ingresadas no coinciden'
+        ];
+
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
+        ], $messagesCustom);
     }
 
     /**
@@ -73,6 +89,7 @@ class RegisterController extends Controller
         ]);
 
         $user->assignRole('Subscriber');
+        $user->givePermissionTo('Create Comments');
     
         return $user;
     }

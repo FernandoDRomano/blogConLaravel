@@ -19,6 +19,7 @@ class AuthServiceProvider extends ServiceProvider
         'App\Tag' => 'App\Policies\TagPolicy',
         'App\Category' => 'App\Policies\CategoryPolicy',
         'App\Post' => 'App\Policies\PostPolicy',
+        'App\Comment' => 'App\Policies\CommentPolicy',
     ];
 
     /**
@@ -30,6 +31,8 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+        Gate::define('view-dashboard', function($user){
+            return !$user->hasRole('Subscriber');
+        });
     }
 }

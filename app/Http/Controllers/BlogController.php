@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Category;
+use App\Comment;
 use App\Post;
 use App\Tag;
 use Illuminate\Http\Request;
@@ -19,7 +20,9 @@ class BlogController extends Controller
     public function show(Post $post){
         if($post->isVisibled()){
             return view('public.post.show', [
-                "post" => $post
+                "post" => $post,
+                "comments" => $post->comments->load('childs'),
+                'comment' => new Comment
             ]);
         }
 

@@ -29,7 +29,11 @@ class PermissionController extends Controller
         $this->authorize('update', $permission);
         
         $permission->update($request->validated());
-        return redirect()->route('admin.permissions.edit', $permission)->with('message', 'Los cambios fueron guardados!!!');
+        return redirect()->route('admin.permissions.edit', $permission)->with([
+            'message' => 'Los datos fueron guardados con éxito!!!',
+            'title' => 'Permiso Actualizado',
+            'icon' => 'success'
+        ]);
     }
 
 }

@@ -1,11 +1,8 @@
 @extends('layout')
 
-@section('content')
+@section('title', $post->title)
 
-@push('style')
-  <!-- Theme style -->
-  <link rel="stylesheet" href="/admin/css/adminlte.min.css">
-@endpush
+@section('content')
 
 <section class="pages container mb-5">
 
@@ -38,6 +35,29 @@
         </div>
     </div>
 
+    <section class="mt-5 pl-5">
+        <h4 class="font-weight-bold text-black-50 h2">Comentarios</h4>
+
+        <hr>
+
+        @auth
+            @can('create', $comment)
+                @include('public.comments._form')
+            @else
+                <h4 class="font-weight-bold">No tienes permisos para comentar aún</h4>
+            @endcan
+        @endauth
+
+        @include('public.comments._list', ['comments' => $comments, 'margin' => ''])
+    </section>
+
+    <form action="{{ route('admin.comments.store', $post) }}" method="POST" id="form-response" class="d-none">
+        @csrf
+        <input type="hidden" name="body" id="form_response_body">
+        <input type="hidden" name="post_id" id="post_id">
+        <input type="hidden" name="parent_comment_id" id="form_response_parent_comment_id">
+    </form>
+
 </section>
 
 @endsection
@@ -51,6 +71,100 @@
         $('.carousel').carousel({
             interval: 2000
         })
+
+        let formResponse = document.getElementById('form-response')
+
+        async function getCommentResponse(e) {
+            e.preventDefault();
+            try {
+                const comment = await getComment(e);
+                               
+                showModalResponseComment(comment);
+
+            } catch (error) {
+                console.log(error)
+            }
+        }
+
+        function showModalResponseComment(comment){
+
+            Swal.fire({
+                
+                title: 'Responder Comentario',
+                html: `
+                        <p class="">Estas por responderle el comentario de <strong>${comment.user.last_name}, ${comment.user.name}</strong></p>
+                        <small class="text-black-50 mt-3">${comment.body}</small>
+                    `,
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonText: 'Comentar',
+                cancelButtonText: 'Cerrar',
+                buttonsStyling:false,
+                customClass: {
+                    confirmButton: 'btn btn-danger text-white mr-2',
+                    cancelButton: 'btn btn-outline-secondary'
+                },
+                input: 'textarea',
+                inputPlaceholder: 'Ingrese su comentario...',
+
+                inputValidator: comentario => {
+                    // Si el valor es válido, debes regresar undefined. Si no, una cadena
+                    if (!comentario) {
+                        return "Por favor escribe tu comentario";
+                    } else {
+                        return undefined;
+                    }
+                }
+
+                }).then((confirmation) => {
+
+                    if(!confirmation.dismiss && confirmation.value){
+
+                        document.getElementById('form_response_body').value = confirmation.value;
+                        document.getElementById('form_response_parent_comment_id').value = comment.id;
+                        document.getElementById('post_id').value = comment.post.id;
+
+                        formResponse.submit();
+                    }
+
+                })
+        }
+
+        async function getComment(e){
+            try {
+            
+                let url = e.target.href;
+
+                console.log(url);
+
+                const config = getConfigFetch('GET');
+
+                const resp = await fetch(url, config)
+                const datos = await resp.json();
+
+                console.log(datos);
+
+                return datos;
+
+            } catch (error) {
+                console.log(error)
+            }
+        }
+
+        function getConfigFetch(method, data =  null){
+            return {
+                headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json, text-plain, */*",
+                        "X-Requested-With": "XMLHttpRequest",
+                        "X-CSRF-TOKEN": document.querySelector("meta[name='csrf-token']").getAttribute('content')
+                        },
+                method: method,
+                credentials: "same-origin",
+                body: data ? JSON.stringify(data) : null
+            }
+        }
+
     </script>
 
 @endpush

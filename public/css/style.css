@@ -15,9 +15,10 @@ header nav li a{
 	font-family: "lato", sans-serif;
 	font-weight: bold;
 }
-header nav li a:hover{
-	border-bottom: 2px solid #1abc9c;
-	padding-bottom: 5px;
+header nav li a.a-link:hover{
+	border-bottom: 2px solid #1abc9c!important;
+	padding-bottom: 5px!important;
+	color: inherit;
 }
 
 .logo img{
@@ -230,16 +231,16 @@ a.btn-bar{
 }
 
 .custom-wrapper {
-          margin-bottom: 1em;
+          /* margin-bottom: 1em; */
           -webkit-font-smoothing: antialiased;
-          height: 3em;
-          overflow: hidden;
+          /* height: 3em; */
+          /* overflow: hidden; */
           -webkit-transition: height 0.5s;
           -moz-transition: height 0.5s;
           -ms-transition: height 0.5s;
           transition: height 0.5s;
       }
-.custom-wrapper ul li a{
+.custom-wrapper ul li a.a-link{
 	display: block;
 	text-align: center;
 }
@@ -348,4 +349,106 @@ a.btn-bar{
 
 .text-principal{
 	color: #1abc9c;
+}
+
+body{
+	background: #f7f9fc!important;
+    font-family: 'lato', sans-serif!important;
+}
+
+.text-left{
+	text-align: left!important;
+}
+
+.text-uppercase-style{
+	text-transform: uppercase;
+}
+
+.d-flex{
+	display: flex;
+}
+
+.flex-column{
+	flex-direction: column;
+}
+
+.aling-items-center{
+	align-items: center;
+}
+
+.h-100px{
+	height: 150px;
+}
+
+.ml-5{
+	margin-left: .5rem;
+}
+
+.m-0{
+	margin: 0;
+}
+
+.small{
+	font-size: .8rem;
+}
+
+.rounded-circle{
+	border-radius: 50%;
+}
+
+.position-relative{
+	position: relative;
+}
+
+.menu-desplegable{
+	padding: 5px 10px;
+	background-color: whitesmoke;
+	position: absolute;
+	z-index: 10;
+	display: flex;
+	width: 220px;
+	height: auto;
+	flex-direction: column;
+	border-radius: 0 0 10% 10%;
+	top: 30px;
+	border: 3px solid black;
+}
+
+.menu-desplegable li {
+	padding: 10px 0px 10px 10px;
+}
+
+.menu-desplegable li a{
+	display: inline;
+}
+
+.menu-desplegable a:hover{
+	border-bottom: 2px solid #1abc9c;
+	color: inherit;
+}
+
+#img-navbar{
+	position: relative;
+}
+
+#img-navbar .menu-desplegable{
+	position: absolute;
+	bottom: 0;
+	right: 0;
+} 
+
+.profile-user:hover > a{
+	border-bottom: 2px solid #1abc9c;
+	padding-bottom: 5px;
+}
+
+.card-blog.card-outline {
+    border-top: 3px solid #1abc9c;
+}
+
+.btn-blog {
+    color: #fff!important;
+    background-color: #1abc9c!important;
+    border-color: #1abc9c!important;
+    box-shadow: none;
 }

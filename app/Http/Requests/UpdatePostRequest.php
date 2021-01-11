@@ -45,8 +45,11 @@ class UpdatePostRequest extends FormRequest
     public function messages()
     {
         return [
-            'category_id.required' => 'El campo Categoría es requerido',
-            'tags.required' => 'El campo Etiqueta es requerido',
+            'extract.required' => 'El campo extracto es requerido', 
+            'category_id.required' => 'El campo categoría es requerido',
+            'category_id.exists' => 'El campo categoría no existe en la base de datos',
+            'tags.required' => 'El campo etiqueta es requerido',
+            'tags.exists' => 'El campo etiqueta no existe en la base de datos',
             'published_at.date' => 'No es una fecha valida',
             'published_at.after_or_equal' => 'La fecha debe ser igual o superior a la actual'
         ];
