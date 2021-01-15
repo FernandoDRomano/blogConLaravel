@@ -96,6 +96,7 @@ class RolesTableSeeder extends Seeder
             "email" => "fernando@gmail.com",
             "photo" => "/admin/img/foto_perfil.jpg",
             "password" => bcrypt('fer4236814'),
+            "active" => true
         ]);
 
         $admin->assignRole($roleAdmin);
@@ -106,6 +107,7 @@ class RolesTableSeeder extends Seeder
             "email" => "eva@gmail.com",
             "photo" => "/admin/img/foto_perfil.jpg",
             "password" => bcrypt('fer4236814'),
+            "active" => true
         ]);
 
         $writter->assignRole($roleWritter);
@@ -116,6 +118,7 @@ class RolesTableSeeder extends Seeder
             "email" => "enrique@gmail.com",
             "photo" => "/admin/img/foto_perfil.jpg",
             "password" => bcrypt('fer4236814'),
+            "active" => true
         ]);
 
         $moderator->assignRole($roleModerator);
@@ -126,6 +129,7 @@ class RolesTableSeeder extends Seeder
             "email" => "nicolas@gmail.com",
             "photo" => "/admin/img/foto_perfil.jpg",
             "password" => bcrypt('fer4236814'),
+            "active" => true
         ]);
 
         $subscriber->assignRole($roleSubscriber);

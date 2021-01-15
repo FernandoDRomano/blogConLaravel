@@ -3,11 +3,13 @@
 namespace App;
 
 use App\Post;
+use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\Auth;
 
 class User extends Authenticatable
 {
@@ -20,7 +22,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'last_name', 'photo'
+        'name', 'email', 'password', 'last_name', 'photo', 'active', 'email_verified_at'
     ];
 
     /**
@@ -51,6 +53,10 @@ class User extends Authenticatable
 
     public function comments(){
         return $this->hasMany(Comment::class);
+    }
+
+    public function token(){
+        return $this->hasOne(UserToken::class);
     }
 
     /* 
@@ -93,6 +99,7 @@ class User extends Authenticatable
     {
         $this->fill($request);
         $this->password = bcrypt($password);
+        $this->active = true;
         $this->photo = '/admin/img/foto_perfil.jpg';
         $this->save();
 
@@ -136,6 +143,18 @@ class User extends Authenticatable
         }else{
             $this->syncPermissions($request['permissions']);
         }
+    }
+
+    public function generateTokenActivate(){
+        $this->token()->create(['token' => Str::random(60)]);
+    }
+
+    public function activeUser()
+    {
+        $this->update(['active' => true, 'email_verified_at' => Carbon::now()]);
+        $this->token->delete();
+
+        Auth::login($this);
     }
 
 }

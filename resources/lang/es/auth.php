@@ -12,6 +12,6 @@ return [
     |
     */
 
-    'failed'   => 'Estas credenciales no coinciden con nuestros registros.',
+    'failed'   => 'Estas credenciales no coinciden con nuestros registros. O Necesitas activar tu cuenta',
     'throttle' => 'Demasiados intentos de acceso. Por favor intente nuevamente en :seconds segundos.',
 ];
