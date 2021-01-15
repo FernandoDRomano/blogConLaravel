@@ -77,4 +77,8 @@ Route::get('users/{user}/profile', 'SubscriberController@edit')->middleware('aut
 Route::put('users/{user}/profile', 'SubscriberController@update')->middleware('auth')->name('subscriber.profile.update');
 
 
+/* ACTIVE USERS TOKEN */
+Route::get('users/active/{token}', 'UserTokenController@active')->name('users.active');
+
+
 Auth::routes();

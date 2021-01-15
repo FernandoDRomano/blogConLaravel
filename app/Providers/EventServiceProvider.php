@@ -15,6 +15,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\UserWasCreated' => [
             'App\Listeners\SendEmailToCreatedUser',
         ],
+        'Illuminate\Auth\Events\Registered' => [
+            'App\Listeners\SendEmailToRegisteredUser',
+        ],
     ];
 
     /**
