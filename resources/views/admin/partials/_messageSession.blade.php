@@ -11,6 +11,17 @@
   
     @endif
 
+    
+    @if (session('status'))
+         Swal.fire({
+              title: 'Restablecimiento de Contraseña',
+              html: `{{ session('status') }}`,
+              icon: 'success',
+              confirmButtonText: 'Cerrar'
+        })
+    @endif
+
+
     @if ($errors->any())
         let template = '';
         @foreach($errors->all() as $message)

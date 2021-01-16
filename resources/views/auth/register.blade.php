@@ -131,7 +131,7 @@
               </div>
 
               <div class="form-group">
-                  <button type="submit" class="btn btn-info btn-block text-uppercase">Registrarse</button>
+                  <button type="submit" class="btn btn-blog btn-block text-uppercase">Registrarse</button>
               </div>
 
             </form>

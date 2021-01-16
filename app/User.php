@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Notifications\ResetPasswordNotification;
 use App\Post;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
@@ -155,6 +156,12 @@ class User extends Authenticatable
         $this->token->delete();
 
         Auth::login($this);
+    }
+
+    /* REESCRIBIENDO EL METODO QUE ENVIA LA NOTIFICACIÓN DE RECUPERACIÓN DE CONTRASEÑA */
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new ResetPasswordNotification($token));
     }
 
 }

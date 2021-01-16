@@ -65,13 +65,16 @@
               </div>
 
               <div class="form-group">
-                  <button type="submit" class="btn btn-info btn-block text-uppercase">Ingresar</button>
+                  <button type="submit" class="btn btn-blog btn-block text-uppercase">Ingresar</button>
               </div>
 
             </form>
 
             <p class="mb-0 text-center">
               <a href="{{ route('register') }}" class="text-black-50">Si no tienes una cuenta. Registrate aquí</a>
+            </p>
+            <p class="mb-0 text-center">
+              <a href="{{ route('password.request') }}" class="text-black-50">¿Olvidaste tu contraseña?</a>
             </p>
           </div>
           <!-- /.login-card-body -->
