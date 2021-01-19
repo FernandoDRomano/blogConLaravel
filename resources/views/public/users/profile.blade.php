@@ -53,6 +53,15 @@
                                                 value="{{ old('email', $user->email) }}"
                                                 placeholder="Ingrese el email del usuario">
                                         </div>
+
+                                        @if ($user->socialProfiles->count())
+                                            <div class="form-group mb-0">
+                                                <label class="d-block">Proveedores Sociales Registrados</label>
+                                                @foreach ($user->socialProfiles as $profile)
+                                                    <p class="btn btn-{{$profile->social_network}}">{{ Str::upper($profile->social_network) }}</p>
+                                                @endforeach
+                                            </div>
+                                        @endif
                     
                                 </div>
                             </div>
@@ -113,7 +122,7 @@
                                     <button type="submit" class="btn btn-blog btn-block text-uppercase">Actualizar Perfil</button>
                                 </div>
                                 <div class="col-md-6 col-xl-4">
-                                    <a href="{{ route('admin.users.show', $user) }}" class="btn btn-outline-dark mt-2 mt-md-0 btn-block text-uppercase">Volver</a>
+                                    <a href="{{ url()->previous() }}" class="btn btn-outline-dark mt-2 mt-md-0 btn-block text-uppercase">Volver</a>
                                 </div>
                             </div>
                         </div> {{-- .col-lg-8 botones --}}

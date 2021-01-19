@@ -12,7 +12,7 @@
                 <h3 class="card-title lea mr-2 d-block">
                 Usuario
                 </h3>
-                <a href="{{ route('admin.users.index') }}" class="d-block link-muted ml-2 text-bold p-0">
+                <a href="{{ url()->previous() }}" class="d-block link-muted ml-2 text-bold p-0">
                     <i class="fas fa-reply"></i>
                     Volver
                 </a>
@@ -49,6 +49,16 @@
                                     <li class="list-group-item">
                                         <i class="fas fa-comments mr-1"></i><strong>Comentarios: </strong> {{$user->comments->count()}}
                                     </li>
+
+                                    @if ($user->socialProfiles->count())
+                                        <li class="list-group-item">
+                                            <strong class="d-block mb-2">Proveedores Sociales</strong>
+                                            @foreach ($user->socialProfiles as $profile)
+                                                <span class="mb-0 px-2 py-1 rounded btn-{{$profile->social_network}}">{{ Str::upper($profile->social_network) }}</span>
+                                            @endforeach
+                                        </li>
+                                        
+                                    @endif
                                 </ul>
 
                                 @can('updateProfile', $user)

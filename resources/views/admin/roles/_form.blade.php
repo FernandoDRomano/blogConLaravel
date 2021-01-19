@@ -76,7 +76,7 @@
                 <button type="submit" class="btn btn-primary btn-block text-uppercase">Guardar Role</button>
             </div>
             <div class="col-md-6 col-xl-4">
-                <a href="{{ route('admin.roles.index') }}" class="btn btn-outline-dark mt-2 mt-md-0 btn-block text-uppercase">Volver</a>
+                <a href="{{ url()->previous() }}" class="btn btn-outline-dark mt-2 mt-md-0 btn-block text-uppercase">Volver</a>
             </div>
         </div>
     </div>{{-- .col-lg-8 botones --}}

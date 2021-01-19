@@ -13,7 +13,25 @@
       <div class="login-box">
         <div class="card">
           <div class="card-body login-card-body">
-            <p class="login-box-msg">Ingresa tus credenciales para ingresar</p>
+
+            <p class="text-center text-black-50">Inicia Sesión con</p>
+            <div class="d-flex justify-content-around text-center">
+              <a href="{{route('login.social', 'facebook')}}" class="btn btn-facebook">
+                <i class="fab fa-facebook-f"></i> Facebook
+              </a>
+
+              <a href="{{route('login.social', 'google')}}" class="btn btn-google">
+                <i class="fab fa-google"></i> Google
+              </a>
+
+              <a href="{{route('login.social', 'github')}}" class="btn btn-github">
+                <i class="fab fa-github"></i> Github
+              </a>
+            </div>
+            
+            <hr>
+
+            <p class="text-black-50 text-center">O ingresa tus credenciales para ingresar</p>
 
             <form action="{{ route('login') }}" method="POST">
               @csrf

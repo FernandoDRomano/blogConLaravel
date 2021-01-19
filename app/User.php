@@ -60,12 +60,16 @@ class User extends Authenticatable
         return $this->hasOne(UserToken::class);
     }
 
+    public function socialProfiles(){
+        return $this->hasMany(SocialProfile::class);
+    }
+
     /* 
         ACCESORES Y MUTADORES
     */
 
     public function setPhotoAttribute($value){
-        if ($value === '/admin/img/foto_perfil.jpg') {
+        if ($value === '/admin/img/foto_perfil.jpg' || Str::contains($value, ['http://', 'https://'])) {
             $this->attributes['photo'] = $value;
         }else{
             $this->attributes['photo'] = '/storage/' . $value;
@@ -77,7 +81,7 @@ class User extends Authenticatable
     */
 
     public function getFullName(){
-        return $this->last_name . ', ' . $this->name;
+        return $this->name . ', ' . $this->last_name;
     }
 
     public function getRoleDisplayNames(){

@@ -81,4 +81,8 @@ Route::put('users/{user}/profile', 'SubscriberController@update')->middleware('a
 Route::get('users/active/{token}', 'UserTokenController@active')->name('users.active');
 
 
+/* SOCIAL NETWORKS */
+Route::get('login/{socialNetwork}', 'SocialLoginController@redirectToSocialNetwork')->name('login.social')->middleware('guest', 'socialNetworkSupported');
+Route::get('login/{socialNetwork}/callback', 'SocialLoginController@handleSocialNetworkCallback')->middleware('guest', 'socialNetworkSupported');
+
 Auth::routes();

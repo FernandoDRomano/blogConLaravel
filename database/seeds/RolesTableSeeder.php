@@ -1,6 +1,7 @@
 <?php
 
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 
@@ -93,10 +94,11 @@ class RolesTableSeeder extends Seeder
         $admin = User::create([
             "name" => "Fernando Daniel",
             "last_name" => "Romano",
-            "email" => "fernando@gmail.com",
+            "email" => "fernandoreceptor2014@gmail.com",
             "photo" => "/admin/img/foto_perfil.jpg",
             "password" => bcrypt('fer4236814'),
-            "active" => true
+            "active" => true,
+            "email_verified_at" => Carbon::now(),
         ]);
 
         $admin->assignRole($roleAdmin);
@@ -104,10 +106,11 @@ class RolesTableSeeder extends Seeder
         $writter = User::create([
             "name" => "Evangelina",
             "last_name" => "Ibarra",
-            "email" => "eva@gmail.com",
+            "email" => "evaibarra2016@gmail.com",
             "photo" => "/admin/img/foto_perfil.jpg",
             "password" => bcrypt('fer4236814'),
-            "active" => true
+            "active" => true,
+            "email_verified_at" => Carbon::now(),
         ]);
 
         $writter->assignRole($roleWritter);
@@ -118,7 +121,8 @@ class RolesTableSeeder extends Seeder
             "email" => "enrique@gmail.com",
             "photo" => "/admin/img/foto_perfil.jpg",
             "password" => bcrypt('fer4236814'),
-            "active" => true
+            "active" => true,
+            "email_verified_at" => Carbon::now(),
         ]);
 
         $moderator->assignRole($roleModerator);
@@ -129,7 +133,8 @@ class RolesTableSeeder extends Seeder
             "email" => "nicolas@gmail.com",
             "photo" => "/admin/img/foto_perfil.jpg",
             "password" => bcrypt('fer4236814'),
-            "active" => true
+            "active" => true,
+            "email_verified_at" => Carbon::now(),
         ]);
 
         $subscriber->assignRole($roleSubscriber);

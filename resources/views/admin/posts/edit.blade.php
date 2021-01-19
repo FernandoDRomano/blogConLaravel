@@ -29,7 +29,7 @@
           <h3 class="card-title lea mr-2 d-block">
            Editar Post
           </h3>
-          <a href="{{ route('admin.posts.index') }}" class="d-block link-muted ml-2 text-bold p-0">
+          <a href="{{ url()->previous() }}" class="d-block link-muted ml-2 text-bold p-0">
             <i class="fas fa-reply"></i>
             Volver
           </a>
@@ -237,7 +237,7 @@
             <h3 class="card-title lea mr-2 d-block">
             Imagenes del Post
             </h3>
-            <a href="{{ route('admin.posts.index') }}" class="d-block link-muted ml-2 text-bold p-0">
+            <a href="{{ url()->previous() }}" class="d-block link-muted ml-2 text-bold p-0">
             <i class="fas fa-reply"></i>
             Volver
             </a>
