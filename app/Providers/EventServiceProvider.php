@@ -15,6 +15,25 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\UserWasCreated' => [
             'App\Listeners\SendEmailToCreatedUser',
         ],
+        'Illuminate\Auth\Events\Registered' => [
+            'App\Listeners\SendEmailToRegisteredUser',
+        ],
+        'App\Events\CommentWasCreated' => [
+            'App\Listeners\SendNotificationToUserModerator',
+            'App\Listeners\SendNotificationToUserOwnerOfCommentWithReply',
+        ],
+        'App\Events\PostWasCreated' => [
+            'App\Listeners\SendNotificationToUserModeratorForPostCreated',
+        ],
+        'App\Events\PostWasDeleted' => [
+            'App\Listeners\SendNotificationToUserOwnerOfPostDeleted',
+        ],
+        'App\Events\PostWasUpdateApproved' => [
+            'App\Listeners\SendNotificationToUserOwnerOfPostApproved',
+        ],
+        'App\Events\PostWasUpdateDisapproved' => [
+            'App\Listeners\SendNotificationToUserOwnerOfPostDesapproved',
+        ]
     ];
 
     /**

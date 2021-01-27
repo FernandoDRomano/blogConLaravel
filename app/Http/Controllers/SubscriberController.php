@@ -11,7 +11,7 @@ class SubscriberController extends Controller
     public function edit(User $user){
         $this->authorize('viewProfile', $user);
         
-        return view('public.users.profile')->with(['user' => $user]);
+        return view('public.users.profile')->with(['user' => $user->load('socialProfiles')]);
     }
 
     public function update(SaveUserRequest $request, User $user){

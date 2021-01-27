@@ -64,6 +64,15 @@
                 </li>
               @endcan
 
+              <li class="nav-item">
+                <a href="{{route('admin.notifications.index')}}" class="nav-link {{ isActive('admin.notifications.*') }}">
+                  <i class="fas fa-envelope mr-2"></i>
+                  <p>
+                    Notificaciones
+                  </p>
+                </a>
+              </li>
+
               @can('view', $category)                
                 <li class="nav-item">
                   <a href="{{route('admin.categories.index')}}" class="nav-link {{ isActive('admin.categories.*') }}">

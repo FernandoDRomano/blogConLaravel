@@ -66,6 +66,13 @@ Route::group(
         Route::resource('comments', 'CommentController', ['as' => 'admin', 'except' => ['create', 'edit', 'show', 'update', 'store']]);
         Route::put('comments/{comment}/approved', 'CommentController@updateApproved')->name('admin.comments.update.approved');
 
+        /* NOTIFICATIONS */
+        Route::get('notifications', 'NotificationController@index', ['as' => 'admin'])->name('admin.notifications.index');
+        Route::get('notifications/{notification}', 'NotificationController@show', ['as' => 'admin'])->name('admin.notifications.show');
+        Route::put('notifications/{notification}', 'NotificationController@update', ['as' => 'admin'])->name('admin.notifications.update');
+        Route::put('notifications', 'NotificationController@readAll', ['as' => 'admin'])->name('admin.notifications.readAll');
+        Route::delete('notifications/{notification}', 'NotificationController@destroy', ['as' => 'admin'])->name('admin.notifications.destroy');
+        Route::delete('notifications', 'NotificationController@destroyAll', ['as' => 'admin'])->name('admin.notifications.destroyAll');
 });
 
 /* COMMENTS ROUTES PUBLIC */
@@ -76,5 +83,13 @@ Route::post('admin/comments', 'Admin\CommentController@store')->middleware('auth
 Route::get('users/{user}/profile', 'SubscriberController@edit')->middleware('auth')->name('subscriber.profile');
 Route::put('users/{user}/profile', 'SubscriberController@update')->middleware('auth')->name('subscriber.profile.update');
 
+
+/* ACTIVE USERS TOKEN */
+Route::get('users/active/{token}', 'UserTokenController@active')->name('users.active');
+
+
+/* SOCIAL NETWORKS */
+Route::get('login/{socialNetwork}', 'SocialLoginController@redirectToSocialNetwork')->name('login.social')->middleware('guest', 'socialNetworkSupported');
+Route::get('login/{socialNetwork}/callback', 'SocialLoginController@handleSocialNetworkCallback')->middleware('guest', 'socialNetworkSupported');
 
 Auth::routes();

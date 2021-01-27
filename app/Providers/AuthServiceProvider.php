@@ -34,5 +34,17 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('view-dashboard', function($user){
             return !$user->hasRole('Subscriber');
         });
+
+        Gate::define('view-notifications', function($user, $notification){
+            return $user->id === $notification->notifiable_id;
+        });
+
+        Gate::define('update-notifications', function($user, $notification){
+            return $user->id === $notification->notifiable_id;
+        });
+
+        Gate::define('delete-notifications', function($user, $notification){
+            return $user->id === $notification->notifiable_id;
+        });
     }
 }

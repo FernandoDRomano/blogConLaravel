@@ -8,7 +8,11 @@ use App\Image;
 use App\Comment;
 use App\Category;
 use Illuminate\Http\Request;
+use App\Events\PostWasCreated;
+use App\Events\PostWasDeleted;
 use App\Http\Controllers\Controller;
+use App\Events\PostWasUpdateApproved;
+use App\Events\PostWasUpdateDisapproved;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 
@@ -35,6 +39,8 @@ class PostController extends Controller
         $this->authorize('create', new Post);
 
         $post = Post::create($request->validated());
+
+        event(new PostWasCreated($post));
 
         return response()->json([
             'success' => 'true', 
@@ -83,6 +89,8 @@ class PostController extends Controller
 
         $post->delete();
 
+        event(new PostWasDeleted($post->title, $post->user));
+
         return redirect()->route('admin.posts.index')->with([
             'success' => true, 
             'message' => 'El Post <strong>' . $post->title .'</strong> fue eliminado con éxito!!!',
@@ -95,7 +103,19 @@ class PostController extends Controller
         $this->authorize('update-approved', $post);
 
         if ($post->validateApproval()) {
-            return redirect()->route('admin.posts.index')->with($post->updateApprovedOrDisapprove());
+            if ($post->approved) {
+                $message = $post->updateDisapprove();
+
+                event(new PostWasUpdateDisapproved($post));
+
+                return redirect()->route('admin.posts.index')->with($message);
+            }else{
+                $message = $post->updateApproved();
+
+                event(new PostWasUpdateApproved($post));
+
+                return redirect()->route('admin.posts.index')->with($message);
+            }
         }
 
         return redirect()->route('admin.posts.index')->with([

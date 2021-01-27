@@ -14,7 +14,7 @@
                 <h3 class="card-title lea mr-2 d-block">
                 Editar Role
                 </h3>
-                <a href="{{ route('admin.roles.index') }}" class="d-block link-muted ml-2 text-bold p-0">
+                <a href="{{ url()->previous() }}" class="d-block link-muted ml-2 text-bold p-0">
                     <i class="fas fa-reply"></i>
                     Volver
                 </a>

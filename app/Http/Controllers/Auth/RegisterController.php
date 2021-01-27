@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Support\Facades\Auth;
 
 class RegisterController extends Controller
 {
@@ -86,11 +88,31 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'photo' => '/admin/img/foto_perfil.jpg',
+            'active' => false
         ]);
 
         $user->assignRole('Subscriber');
         $user->givePermissionTo('Create Comments');
+        $user->generateTokenActivate();
     
         return $user;
+    }
+
+    /**
+     * The user has been registered.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  mixed  $user
+     * @return mixed
+     */
+    protected function registered(Request $request, $user)
+    {
+        Auth::logout($user);
+
+        return redirect()->route('login')->with([
+            'message' => 'Te hemos enviado un link de activación, revisa tu correo. ', 
+            'title' => 'Usuario Creado', 
+            'icon' => 'info'
+        ]);
     }
 }

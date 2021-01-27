@@ -72,14 +72,27 @@ class Post extends Model
         return false;
     }
 
-    public function updateApprovedOrDisapprove(){
+    public function updateApproved(){
         $this->update([
-            'approved' => $this->approved ? 0 : 1
+            'approved' => 1
         ]);
 
         return [
             'success' => true, 
-            'message' => 'El Post <strong>' . $this->title .'</strong> fue actualizado su estado a <strong>' . ($this->approved ? 'Aprobado' : 'Desaprobado') . '</strong>',
+            'message' => 'El Post <strong>' . $this->title .'</strong> fue actualizado su estado a <strong>Aprobado</strong>',
+            'title' => 'Post Actualizado',
+            'icon' => 'success'
+        ];
+    }
+
+    public function updateDisapprove(){
+        $this->update([
+            'approved' => 0
+        ]);
+
+        return [
+            'success' => true, 
+            'message' => 'El Post <strong>' . $this->title .'</strong> fue actualizado su estado a <strong>Desaprobado</strong>',
             'title' => 'Post Actualizado',
             'icon' => 'success'
         ];
