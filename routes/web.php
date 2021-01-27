@@ -66,6 +66,13 @@ Route::group(
         Route::resource('comments', 'CommentController', ['as' => 'admin', 'except' => ['create', 'edit', 'show', 'update', 'store']]);
         Route::put('comments/{comment}/approved', 'CommentController@updateApproved')->name('admin.comments.update.approved');
 
+        /* NOTIFICATIONS */
+        Route::get('notifications', 'NotificationController@index', ['as' => 'admin'])->name('admin.notifications.index');
+        Route::get('notifications/{notification}', 'NotificationController@show', ['as' => 'admin'])->name('admin.notifications.show');
+        Route::put('notifications/{notification}', 'NotificationController@update', ['as' => 'admin'])->name('admin.notifications.update');
+        Route::put('notifications', 'NotificationController@readAll', ['as' => 'admin'])->name('admin.notifications.readAll');
+        Route::delete('notifications/{notification}', 'NotificationController@destroy', ['as' => 'admin'])->name('admin.notifications.destroy');
+        Route::delete('notifications', 'NotificationController@destroyAll', ['as' => 'admin'])->name('admin.notifications.destroyAll');
 });
 
 /* COMMENTS ROUTES PUBLIC */

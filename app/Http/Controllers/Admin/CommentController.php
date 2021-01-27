@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Comment;
-use Illuminate\Http\Request;
+use App\Events\CommentWasCreated;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CommentRequest;
-use App\Post;
+use App\Notifications\NotifyCommentDelete;
+use App\Notifications\NotifyCommentApproved;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\NotifyCommentDisapprove;
 
 class CommentController extends Controller
 {
@@ -26,6 +29,8 @@ class CommentController extends Controller
 
         $comment = Comment::create($request->validated());
 
+        event(new CommentWasCreated($comment));
+
         return redirect()->back()->with([
             'success' => true, 
             'message' => 'El Comentario <strong>' . $comment->body .'</strong> fue creado con éxito, <strong class="text-info">ahora debes esperar a que sea aprobado por nuestros Moderadores</strong>!!!',
@@ -42,7 +47,14 @@ class CommentController extends Controller
     public function updateApproved(Comment $comment){
         $this->authorize('update', $comment);
 
-        $comment->approved = $comment->approved ? 0 : 1;
+        if ($comment->approved) {
+            $comment->approved = 0;
+            Notification::send($comment->user, new NotifyCommentDisapprove($comment));
+        }else{
+            $comment->approved = 1;
+            Notification::send($comment->user, new NotifyCommentApproved($comment));
+        }
+
         $comment->save();
 
         return redirect()->route('admin.comments.index')->with([
@@ -59,6 +71,8 @@ class CommentController extends Controller
         $this->authorize('delete', $comment);
 
         $comment->delete();
+
+        Notification::send($comment->user, new NotifyCommentDelete($comment->body));
 
         return redirect()->route('admin.comments.index')->with([
             'success' => true, 
