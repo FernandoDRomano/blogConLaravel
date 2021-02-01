@@ -53,9 +53,9 @@ class SaveUserRequest extends FormRequest
             'photo' => [
                 'sometimes',
                 'nullable',
-                'image',
+                // 'image', DEJO DE FUNCIONAR ESTA REGLA CON TODAS LAS EXTENCIONES DE LAS IMAGENES
+                'mimes:jpeg,jpg,png,bmp',
                 'max:2048',
-                //Rule::dimensions()->maxWidth(2000)->maxHeight(2000)->ratio(1 / 1),
                 Rule::dimensions()->maxWidth(2000)->maxHeight(2000),
             ],
             'email' => [

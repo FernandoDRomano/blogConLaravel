@@ -57,10 +57,13 @@ Route::group(
         /* USERS */
         Route::resource('users', 'UserController', ['as' => 'admin']);
         Route::get('users/get/{user}', 'UserController@getUser')->name('admin.users.get');
+        Route::get('users/all', 'UserController@getAll')->name('admin.users.all');
         Route::get('users/{user}/profile', 'UserController@profile')->name('admin.users.profile');
         Route::get('users/{user}/profile/edit', 'UserController@editProfile')->name('admin.users.profile.edit');
         Route::put('users/{user}/profile', 'UserController@updateProfile')->name('admin.users.profile.update');
         Route::put('users/{user}/password', 'UserController@updatePassword')->name('admin.users.password');
+        Route::post('users/{user}/exportPDF', 'ExportController@exportUserPDF')->name('admin.export.user.pdf');
+        Route::post('users/exportExcel', 'ExportController@exportAllUsersExcel')->name('admin.export.users.excel');
 
         /* COMMENTS */
         Route::resource('comments', 'CommentController', ['as' => 'admin', 'except' => ['create', 'edit', 'show', 'update', 'store']]);

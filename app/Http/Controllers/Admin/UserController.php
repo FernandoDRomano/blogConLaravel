@@ -6,6 +6,8 @@ use App\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Events\UserWasCreated;
+use Yajra\Datatables\Datatables;
+use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SaveUserRequest;

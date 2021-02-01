@@ -19,11 +19,23 @@
             <div class="contenedor d-flex justify-content-between align-items-center">
                 <h3 class="h3 mb-0">Administración de Usuarios</h3>
                 
-                @can('create', $user)
-                    <a href="{{ route('admin.users.create') }}" class="btn btn-primary">
-                        <i class="fas fa-plus-circle"></i> Nuevo
-                    </a>
-                @endcan
+                <div class="d-flex">
+                    @can('create', $user)
+                        <a href="{{ route('admin.users.create') }}" class="btn btn-primary">
+                            <i class="fas fa-plus-circle"></i> Nuevo
+                        </a>
+                    @endcan
+
+                    @can('export', Model::class)                        
+                        <form action="{{ route('admin.export.users.excel') }}" method="POST" class="ml-2">
+                            @csrf
+                            <button class="btn btn-success">
+                                <i class="fas fa-file-excel"></i>
+                                Exportar a Excel
+                            </button>
+                        </form>
+                    @endcan
+                </div>
 
             </div>
         </div>
@@ -47,12 +59,12 @@
                         <td>{{ $user->email }}</td>
                         <td>{{ $user->getRoleDisplayNames() }}</td>
                         <td>{{ $user->getPermissionDisplayNames() }}</td>
-                        <td> 
+                        <td class="d-flex"> 
 
                             @can('update', $user)
                                 <a 
                                     href="{{ route('admin.users.edit', $user) }}" 
-                                    class="btn btn-warning text-white btn-sm">
+                                    class="btn btn-warning text-white btn-sm mx-1">
                                     <i class="fas fa-edit"></i>
                                 </a>
                             @endcan
@@ -60,7 +72,7 @@
                             @can('delete', $user)
                                 <a 
                                     href="{{ route('admin.users.get', $user) }}" 
-                                    class="btn btn-danger btn-sm"
+                                    class="btn btn-danger btn-sm mx-1"
                                     onclick="getUserDelete(event)">
                                     <i class="fas fa-trash-alt"></i>
                                 </a>   
@@ -68,9 +80,18 @@
 
                             @can('view', $user)
                                 <a href="{{route('admin.users.show', $user)}}"
-                                    class="btn btn-dark btn-sm">
+                                    class="btn btn-dark btn-sm mx-1">
                                     <i class="fas fa-eye"></i>
                                 </a>
+                            @endcan
+
+                            @can('export')                                
+                                <form action="{{ route('admin.export.user.pdf', $user) }}" method="POST" class="">
+                                    @csrf
+                                    <button class="btn bg-light btn-sm mx-1">
+                                        <i class="fas fa-file-pdf text-danger"></i>
+                                    </button>
+                                </form>
                             @endcan
                             
                         </td>
@@ -108,7 +129,6 @@
         let table = $('#usuarios').DataTable({
                     "responsive": true, 
                     "autoWidth": false,
-                    "processing": true,
                     "language": {
                         "info": "_TOTAL_ registros",
                         "search": "Buscar",

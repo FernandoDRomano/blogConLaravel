@@ -143,5 +143,20 @@ class RolesTableSeeder extends Seeder
         $moderator->givePermissionTo('Create Comments');
         $subscriber->givePermissionTo('Create Comments');
 
+        for ($i=0; $i < 100 ; $i++) { 
+            $user = User::create([
+                "name" => "Usuario de prueba " . $i,
+                "last_name" => "Blog",
+                "email" => "prueba@gmail.com." . $i,
+                "photo" => "/admin/img/foto_perfil.jpg",
+                "password" => bcrypt('fer4236814'),
+                "active" => true,
+                "email_verified_at" => Carbon::now(),
+            ]);
+
+            $user->assignRole($roleSubscriber);
+            $user->givePermissionTo('Create Comments');
+        }
+
     }
 }
