@@ -10,6 +10,7 @@ use App\Notifications\NotifyCommentDelete;
 use App\Notifications\NotifyCommentApproved;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\NotifyCommentDisapprove;
+use Yajra\DataTables\Facades\DataTables;
 
 class CommentController extends Controller
 {
@@ -18,9 +19,7 @@ class CommentController extends Controller
     {
         $this->authorize('view', new Comment);
 
-        return view('admin.comments.index', [
-            'comments' => Comment::latest()->with(['user', 'post'])->get(),
-        ]);
+        return view('admin.comments.index');
     }
 
     public function store(CommentRequest $request)
@@ -42,6 +41,23 @@ class CommentController extends Controller
     public function getComment(Comment $comment){
         return response()->json($comment->load(['user', 'post', 'childs']));
 
+    }
+
+    public function all(){
+        if(request()->ajax()){
+            return Datatables::eloquent(Comment::with(['user', 'post'])->latest())
+                                ->addColumn('btn', 'admin.comments.datatables._actions')
+                                ->addColumn('published_at', 'admin.comments.datatables._published_at')
+                                ->addColumn('owner', 'admin.comments.datatables._owner')
+                                ->addColumn('comment', 'admin.comments.datatables._comment')
+                                ->addColumn('post', 'admin.comments.datatables._post')
+                                ->addColumn('state', 'admin.comments.datatables._state')
+                                ->rawColumns(['btn', 'owner', 'owner', 'comment', 'posts', 'state'])        
+                                ->make(true);
+        }else{
+            return redirect()->back();
+        }
+        
     }
 
     public function updateApproved(Comment $comment){

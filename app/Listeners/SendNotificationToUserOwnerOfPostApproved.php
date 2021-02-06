@@ -10,9 +10,12 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\NotifyOwnerPostApproved;
 use App\Notifications\NotifyOwnerPostDisapprove;
+use Illuminate\Bus\Queueable;
 
-class SendNotificationToUserOwnerOfPostApproved
+class SendNotificationToUserOwnerOfPostApproved implements ShouldQueue
 {
+
+    use Queueable;
     /**
      * Create the event listener.
      *

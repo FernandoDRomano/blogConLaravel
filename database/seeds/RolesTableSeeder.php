@@ -1,5 +1,6 @@
 <?php
 
+use App\Comment;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
@@ -143,7 +144,7 @@ class RolesTableSeeder extends Seeder
         $moderator->givePermissionTo('Create Comments');
         $subscriber->givePermissionTo('Create Comments');
 
-        for ($i=0; $i < 100 ; $i++) { 
+        for ($i=0; $i < 996 ; $i++) { 
             $user = User::create([
                 "name" => "Usuario de prueba " . $i,
                 "last_name" => "Blog",

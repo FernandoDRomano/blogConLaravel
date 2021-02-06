@@ -1,0 +1,1 @@
+{{ $model->published_at ? $model->published_at->format('d-m-Y') : 'No tiene' }}

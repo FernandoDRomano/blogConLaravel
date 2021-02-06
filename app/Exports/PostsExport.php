@@ -2,7 +2,7 @@
 
 namespace App\Exports;
 
-use App\User;
+use App\Post;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -12,7 +12,7 @@ use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class UsersExport implements FromQuery, WithMapping, ShouldAutoSize, WithHeadings, WithStyles, ShouldQueue
+class PostsExport implements FromQuery, WithMapping, ShouldAutoSize, WithHeadings, WithStyles, ShouldQueue
 {
 
     use Exportable;
@@ -21,24 +21,24 @@ class UsersExport implements FromQuery, WithMapping, ShouldAutoSize, WithHeading
     */
     public function query()
     {
-        // return User::with('roles', 'permissions')->get();
-        return User::with('roles', 'permissions');
+        return Post::with('user', 'comments', 'tags', 'category');
     }
 
     /* 
     * EL METODO map SIRVE PARA TRABAJAR CON LAS RELACIONES DE ELOQUENT, ES POR ESTO
     * QUE PUEDO ACCEDER A LAS RELACIONES DE LOS MODELOS Y PERMISOS
     */
-    public function map($user): array
+    public function map($post): array
     {
         return [
-            $user->id,
-            $user->last_name,
-            $user->name,
-            $user->email,
-            $user->getRoleDisplayNames(),
-            $user->getPermissionDisplayNames(),
-            $user->created_at->format('d-m-Y'),
+            $post->id,
+            $post->title,
+            $post->published_at->format('d-m-Y'),
+            $post->user->getFullName(),
+            $post->approved ? 'Aprobado' : 'Desaprobado',
+            $post->category->name,
+            $post->tags->implode('name', ', '),
+            $post->comments->count(),
         ];
     }
 
@@ -49,12 +49,13 @@ class UsersExport implements FromQuery, WithMapping, ShouldAutoSize, WithHeading
     {
         return [
             '#ID',
-            'APELLIDO',
-            'NOMBRE',
-            'EMAIL',
-            'ROLE',
-            'PERMISOS ADICIONALES',
-            'FECHA DE CREACIÓN',
+            'TÍTULO',
+            'PUBLICADO',
+            'AUTOR',
+            'ESTADO',
+            'CATEGORÍA',
+            'ETIQUETAS',
+            'COMENTARIOS',
         ];
     }
 

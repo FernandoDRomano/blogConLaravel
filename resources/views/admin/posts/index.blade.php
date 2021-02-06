@@ -22,11 +22,23 @@
         <div class="card-header">
             <div class="contenedor d-flex justify-content-between align-items-center">
                 <h3 class="h3 mb-0">Administración de Posts</h3>
-                @can('create', $post)
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-create">
-                        <i class="fas fa-plus-circle"></i> Nuevo
-                    </button>
-                @endcan
+                <div class="d-flex">
+                    @can('create', $post)
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-create">
+                            <i class="fas fa-plus-circle"></i> Nuevo
+                        </button>
+                    @endcan
+    
+                    @can('export', Model::class)                        
+                        <form action="{{ route('admin.export.posts.excel') }}" method="POST" class="ml-2">
+                            @csrf
+                            <button class="btn btn-success">
+                                <i class="fas fa-file-excel"></i>
+                                Exportar a Excel
+                            </button>
+                        </form>
+                    @endcan
+                </div>
             </div>
         </div>
         <div class="card-body">
@@ -43,85 +55,6 @@
                         <th>Acciones</th>
                     </tr>
                 </thead>
-                <tbody>
-                    @forelse ($posts as $post)
-                    <tr>
-                        <td>{{ $post->id }}</td>
-                        <td>{{ Str::limit($post->title, 20) }}</td>
-                        <td>{{ $post->published_at ? $post->published_at->format('d-m-Y') : 'No tiene' }}</td>
-                        <td>{{ $post->user->name }}</td>
-                        <td>
-                            @if ($post->category)
-                                <p class="d-inline lead"><span class="badge badge-pill badge-primary">{{$post->category->name}}</span></p>
-                            @else
-                                <p class="lead"><span class="badge badge-pill badge-light">No tiene Categoría</span></p>
-                            @endif
-                        </td>
-                        <td>
-                            @forelse ($post->tags as $tag)
-                                <p class="d-inline lead"><span class="badge badge-pill badge-info">{{$tag->name}}</span></p>
-                            @empty
-                                <p class="lead"><span class="badge badge-pill badge-light">No tiene Etiquetas</span></p>
-                            @endforelse
-                        </td>
-                        <td>
-                            @if ($post->approved)
-                                <p class="lead d-inline"><span class="badge badge-pill badge-success">Aprobado</span></p>
-                            @else
-                                <p class="lead"><span class="badge badge-pill badge-secondary">Falta aprobar</span></p>
-                            @endif
-                        </td>
-                        <td> 
-                            @can('update', $post)
-                                <a 
-                                    href="{{ route('admin.posts.edit', $post) }}" 
-                                    class="btn btn-warning text-white btn-sm">
-                                    <i class="fas fa-edit"></i>
-                                </a>     
-                            @endcan
-                           
-                            @can('delete', $post)    
-                                <a 
-                                    href="{{ route('admin.posts.get', $post) }}" 
-                                    class="btn btn-danger btn-sm"
-                                    onclick="getPostDelete(event)">
-                                    <i class="fas fa-trash-alt"></i>
-                                </a>    
-                            @endcan
-                            
-                            @can('show', $post)
-                                <a href="{{route('admin.posts.show', $post)}}"
-                                    target="_blank"
-                                    style="background-color: #3c8dbc"
-                                    class="btn text-white btn-sm">
-                                    <i class="fas fa-eye"></i>
-                                </a>
-                            @endcan
-
-                            @can('update-approved', $post)    
-                                @if ($post->approved)
-                                    <a 
-                                        href="{{ route('admin.posts.get', $post) }}" 
-                                        onclick="updatePostApproved(event)" 
-                                        class="btn btn-sm text-white" style="background-color: #111111">
-                                        <i class="fas fa-times-circle"></i>    
-                                    </a>
-                                @else
-                                    <a 
-                                        href="{{ route('admin.posts.get', $post) }}" 
-                                        onclick="updatePostApproved(event)" 
-                                        class="btn btn-sm text-white" style="background-color: #605ca8">
-                                        <i class="fas fa-check-circle"></i>
-                                    </a>
-                                @endif
-                            @endcan
-            
-                        </td>
-                    </tr>
-                    @empty
-                        
-                    @endforelse
-                </tbody>
             </table>
         </div>
         <!-- /.card-body -->
@@ -188,6 +121,18 @@
                     "responsive": true, 
                     "autoWidth": false,
                     "processing": true,
+                    "serverSide": true,
+                    "ajax": "{{ route('admin.posts.all') }}",
+                    "columns": [
+                        {data: 'id'},
+                        {data: 'title'},
+                        {data: 'published_at'},
+                        {data: 'owner'},
+                        {data: 'category'},
+                        {data: 'tags'},
+                        {data: 'state'},
+                        {data: 'btn'}
+                    ],
                     "language": {
                         "info": "_TOTAL_ registros",
                         "search": "Buscar",

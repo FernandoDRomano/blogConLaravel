@@ -9,7 +9,7 @@ class NotificationController extends Controller
 {
     public function index(){
         return view('admin.notifications.index', [
-            'notifications' => current_user()->notifications()->latest()->get()
+            'notifications' => current_user()->notifications()->latest()->paginate(20)
         ]);
     }
 
