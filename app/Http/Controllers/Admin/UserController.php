@@ -4,12 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\User;
 use Illuminate\Support\Str;
-use Illuminate\Http\Request;
 use App\Events\UserWasCreated;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SaveUserRequest;
 use Spatie\Permission\Models\Permission;
+use Yajra\DataTables\Facades\DataTables;
 use App\Http\Requests\UserPasswordRequest;
 
 class UserController extends Controller
@@ -22,12 +22,26 @@ class UserController extends Controller
 
         return view('admin.users.index', [
             'user' => $user,
-            'users' => User::with(['roles', 'permissions'])->get()
+            //'users' => User::with(['roles', 'permissions'])->get()
         ]);
     }
 
     public function getUser(User $user){
         return response()->json($user);
+    }
+
+    public function all(){
+        if(request()->ajax()){
+            return Datatables::eloquent(User::select('id', 'name', 'last_name', 'email')->with(['roles:display_name', 'permissions:display_name'])->latest())
+                                ->addColumn('btn', 'admin.users.datatables._actions')
+                                ->addColumn('roles', 'admin.users.datatables._roles')
+                                ->addColumn('permissions', 'admin.users.datatables._permissions')
+                                ->rawColumns(['btn', 'roles', 'permissions'])        
+                                ->make(true);
+        }else{
+            return redirect()->back();
+        }
+        
     }
 
     public function create()

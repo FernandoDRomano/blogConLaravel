@@ -38,11 +38,13 @@ Route::group(
                 ->only(['index', 'store', 'update', 'destroy']);
 
         /* POSTS */
+        Route::get('posts/all', 'PostController@all')->name('admin.posts.all');
         Route::get('posts/get/{post}', 'PostController@getPost')->name('admin.posts.get');
         Route::resource('posts', 'PostController', ['as' => 'admin']);
         Route::post('posts/{post}/images', 'PostController@uploadImages')->name('admin.posts.upload.images');
         Route::delete('posts/{post}/images/{image}', 'PostController@destroyImages')->name('admin.posts.destroy.images');
         Route::put('posts/{post}/approved', 'PostController@updateApproved')->name('admin.posts.update.approved');
+        Route::post('posts/exportExcel', 'ExportController@exportAllPostsExcel')->name('admin.export.posts.excel');
 
         /* IMAGES */
         Route::get('images/{image}', 'ImageController@getImage')->name('admin.images.get');
@@ -55,14 +57,18 @@ Route::group(
         Route::get('roles/get/{role}', 'RoleController@getRole')->name('admin.roles.get');
 
         /* USERS */
+        Route::get('users/all', 'UserController@all')->name('admin.users.all');
         Route::resource('users', 'UserController', ['as' => 'admin']);
         Route::get('users/get/{user}', 'UserController@getUser')->name('admin.users.get');
         Route::get('users/{user}/profile', 'UserController@profile')->name('admin.users.profile');
         Route::get('users/{user}/profile/edit', 'UserController@editProfile')->name('admin.users.profile.edit');
         Route::put('users/{user}/profile', 'UserController@updateProfile')->name('admin.users.profile.update');
         Route::put('users/{user}/password', 'UserController@updatePassword')->name('admin.users.password');
+        Route::post('users/{user}/exportPDF', 'ExportController@exportUserPDF')->name('admin.export.user.pdf');
+        Route::post('users/exportExcel', 'ExportController@exportAllUsersExcel')->name('admin.export.users.excel');
 
         /* COMMENTS */
+        Route::get('comments/all', 'CommentController@all')->name('admin.comments.all');
         Route::resource('comments', 'CommentController', ['as' => 'admin', 'except' => ['create', 'edit', 'show', 'update', 'store']]);
         Route::put('comments/{comment}/approved', 'CommentController@updateApproved')->name('admin.comments.update.approved');
 

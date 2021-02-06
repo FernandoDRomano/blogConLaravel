@@ -1,0 +1,1 @@
+{{$model->created_at ? $model->created_at->format('d-m-Y') : 'No tiene'}}

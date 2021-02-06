@@ -37,65 +37,6 @@
                         <th>Acciones</th>
                     </tr>
                 </thead>
-                <tbody>
-                    @forelse ($comments as $comment)
-                    <tr>
-                        <td>{{ $comment->id }}</td>
-                        <td>{{ $comment->post->title }}</td>
-                        <td>{{ Str::limit($comment->body, 30, '...') }}</td>
-                        <td>{{ $comment->user->getFullName() }}</td>
-                        <td>{{ $comment->created_at ? $comment->created_at->format('d-m-Y') : 'No tiene' }}</td>
-                        <td>
-                            @if ($comment->approved)
-                                <p class="lead d-inline"><span class="badge badge-pill badge-success">Aprobado</span></p>
-                            @else
-                                <p class="lead"><span class="badge badge-pill badge-secondary">Falta aprobar</span></p>
-                            @endif
-                        </td>
-
-                        <td> 
-                            @can('delete', $comment)
-                                <a 
-                                    href="{{ route('admin.comments.get', $comment) }}" 
-                                    class="btn btn-danger btn-sm mb-1"
-                                    onclick="getCommentDelete(event)">
-                                    <i class="fas fa-trash-alt"></i>
-                                </a>    
-                            @endcan
-
-                            @can('view', $comment)
-                                <a href="{{ route('admin.comments.get', $comment) }}"
-                                    style="background-color: #3c8dbc"
-                                    onclick="getCommentShow(event)"
-                                    class="btn text-white btn-sm mb-1">
-                                    <i class="fas fa-eye"></i>
-                                </a>
-                            @endcan
-
-                            @can('update', $comment)
-                                @if ($comment->approved)
-                                    <a 
-                                        href="{{ route('admin.comments.get', $comment) }}" 
-                                        onclick="updateCommentApproved(event)" 
-                                        class="btn btn-sm text-white mb-1" style="background-color: #111111">
-                                        <i class="fas fa-times-circle"></i>    
-                                    </a>
-                                @else
-                                    <a 
-                                        href="{{ route('admin.comments.get', $comment) }}" 
-                                        onclick="updateCommentApproved(event)" 
-                                        class="btn btn-sm text-white mb-1" style="background-color: #605ca8">
-                                        <i class="fas fa-check-circle"></i>
-                                    </a>
-                                @endif
-                            @endcan
-                               
-                        </td>
-                    </tr>
-                    @empty
-                        
-                    @endforelse
-                </tbody>
             </table>
         </div>
         <!-- /.card-body -->
@@ -132,6 +73,17 @@
                     "responsive": true, 
                     "autoWidth": false,
                     "processing": true,
+                    "serverSide": true,
+                    "ajax": "{{ route('admin.comments.all') }}",
+                    "columns": [
+                        {data: 'id'},
+                        {data: 'post'},
+                        {data: 'comment'},
+                        {data: 'owner'},
+                        {data: 'published_at'},
+                        {data: 'state'},
+                        {data: 'btn'}
+                    ],
                     "language": {
                         "info": "_TOTAL_ registros",
                         "search": "Buscar",

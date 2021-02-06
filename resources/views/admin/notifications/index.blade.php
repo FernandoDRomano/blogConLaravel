@@ -44,20 +44,20 @@
                             </h5>
                             <small class="text-black-50">{{$notification->created_at->diffForHumans()}}</small>
                         </div>
-                        <p class="mb-2">{{ $notification->data['text'] }}</p>
-                        <div class="d-flex flex-row-reverse justify-content-between">
+                        <p class="mb-2">{!! $notification->data['text'] !!}</p>
+                        <div class="d-flex flex-row-reverse">
 
                             <form action="{{route('admin.notifications.destroy', $notification)}}" method="POST">
                                 @csrf
                                 @method('DELETE')
-                                <button href="#" class="btn btn-danger btn-sm ">Eliminar</button>
+                                <button href="#" class="btn btn-danger btn-sm">Eliminar</button>
                             </form>
 
                             @if (!$notification->read_at)
                                 <form action="{{route('admin.notifications.update', $notification)}}" method="POST">
                                     @csrf
                                     @method('PUT')
-                                    <button href="#" class="btn btn-success btn-sm">Marcar como leída</button>
+                                    <button href="#" class="btn btn-success btn-sm mx-2">Marcar como leída</button>
                                 </form>
                             @endif
 
@@ -76,5 +76,7 @@
         </div>
         <!-- /.card-body -->
   </div>
+
+    {{ $notifications->links() }}
 
 @endsection

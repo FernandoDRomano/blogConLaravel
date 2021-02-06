@@ -46,5 +46,9 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('delete-notifications', function($user, $notification){
             return $user->id === $notification->notifiable_id;
         });
+
+        Gate::define('export', function($user){
+            return $user->hasRole('Admin');
+        });
     }
 }

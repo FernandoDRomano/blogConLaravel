@@ -15,6 +15,7 @@ use App\Events\PostWasUpdateApproved;
 use App\Events\PostWasUpdateDisapproved;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
+use Yajra\DataTables\Facades\DataTables;
 
 class PostController extends Controller
 {
@@ -24,7 +25,6 @@ class PostController extends Controller
         $this->authorize('view', $post = new Post);
 
         return view('admin.posts.index', [
-            "posts" => Post::Owner()->latest()->with(['user', 'category', 'tags'])->get(),
             'post' => $post,
         ]);
     }
@@ -32,6 +32,23 @@ class PostController extends Controller
     public function getPost(Post $post)
     {
         return response()->json($post);
+    }
+
+    public function all(){
+        if(request()->ajax()){
+            return Datatables::eloquent(Post::owner()->latest()->with(['user', 'category', 'tags']))
+                                ->addColumn('btn', 'admin.posts.datatables._actions')
+                                ->addColumn('published_at', 'admin.posts.datatables._published_at')
+                                ->addColumn('owner', 'admin.posts.datatables._owner')
+                                ->addColumn('category', 'admin.posts.datatables._category')
+                                ->addColumn('tags', 'admin.posts.datatables._tags')
+                                ->addColumn('state', 'admin.posts.datatables._state')
+                                ->rawColumns(['btn', 'owner', 'category', 'tags', 'state'])        
+                                ->make(true);
+        }else{
+            return redirect()->back();
+        }
+        
     }
 
     public function store(StorePostRequest $request)

@@ -22,7 +22,7 @@
                     </h5>
                     <small class="text-black-50">{{$notification->created_at->diffForHumans()}}</small>
                 </div>
-                <p class="mb-2">{{ $notification->data['text'] }}</p>
+                <p class="mb-2">{!! $notification->data['text'] !!}</p>
                 <div class="d-flex flex-row-reverse justify-content-between">
 
                     <form action="{{route('admin.notifications.destroy', $notification)}}" method="POST">

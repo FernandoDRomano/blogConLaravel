@@ -1,5 +1,6 @@
 <?php
 
+use App\Comment;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
@@ -142,6 +143,21 @@ class RolesTableSeeder extends Seeder
         $writter->givePermissionTo('Create Comments');
         $moderator->givePermissionTo('Create Comments');
         $subscriber->givePermissionTo('Create Comments');
+
+        for ($i=0; $i < 996 ; $i++) { 
+            $user = User::create([
+                "name" => "Usuario de prueba " . $i,
+                "last_name" => "Blog",
+                "email" => "prueba@gmail.com." . $i,
+                "photo" => "/admin/img/foto_perfil.jpg",
+                "password" => bcrypt('fer4236814'),
+                "active" => true,
+                "email_verified_at" => Carbon::now(),
+            ]);
+
+            $user->assignRole($roleSubscriber);
+            $user->givePermissionTo('Create Comments');
+        }
 
     }
 }

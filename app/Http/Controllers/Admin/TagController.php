@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Tag;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SaveTagRequest;
+use Yajra\DataTables\Facades\DataTables;
 
 class TagController extends Controller
 {
@@ -20,11 +21,10 @@ class TagController extends Controller
 
     public function all(){
         if(request()->ajax()){
-			return datatables()
-			->eloquent(Tag::query()->latest())
-			->addColumn('btn', 'admin.tags._actions')
-			->rawColumns(['btn'])
-			->make(true);
+            return DataTables::eloquent(Tag::select('id', 'name', 'url')->latest())
+                                ->addColumn('btn', 'admin.tags._actions')
+                                ->rawColumns(['btn'])
+                                ->toJson();
         }else{
             return redirect()->back();
         }

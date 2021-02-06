@@ -1,0 +1,1 @@
+{{ Str::limit($model->body, 30, '...') }}

@@ -78,6 +78,8 @@
 
 	</section><!-- fin del div.posts.container -->
 
-	{{ $posts->links() }}
+	<div class="d-flex w-100 justify-content-center my-3">
+		{{ $posts->links() }}
+	</div>
 	
 @endsection

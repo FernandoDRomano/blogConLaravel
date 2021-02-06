@@ -19,11 +19,23 @@
             <div class="contenedor d-flex justify-content-between align-items-center">
                 <h3 class="h3 mb-0">Administración de Usuarios</h3>
                 
-                @can('create', $user)
-                    <a href="{{ route('admin.users.create') }}" class="btn btn-primary">
-                        <i class="fas fa-plus-circle"></i> Nuevo
-                    </a>
-                @endcan
+                <div class="d-flex">
+                    @can('create', $user)
+                        <a href="{{ route('admin.users.create') }}" class="btn btn-primary">
+                            <i class="fas fa-plus-circle"></i> Nuevo
+                        </a>
+                    @endcan
+
+                    @can('export', Model::class)                        
+                        <form action="{{ route('admin.export.users.excel') }}" method="POST" class="ml-2">
+                            @csrf
+                            <button class="btn btn-success">
+                                <i class="fas fa-file-excel"></i>
+                                Exportar a Excel
+                            </button>
+                        </form>
+                    @endcan
+                </div>
 
             </div>
         </div>
@@ -33,52 +45,13 @@
                     <tr role="row">
                         <th>ID</th>
                         <th>Nombre</th>
+                        <th>Apellido</th>
                         <th>Email</th>
                         <th>Roles</th>
                         <th>Permisos Adicionales</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
-                <tbody>
-                    @forelse ($users as $user)
-                    <tr>
-                        <td>{{ $user->id }}</td>
-                        <td>{{ $user->getFullName() }}</td>
-                        <td>{{ $user->email }}</td>
-                        <td>{{ $user->getRoleDisplayNames() }}</td>
-                        <td>{{ $user->getPermissionDisplayNames() }}</td>
-                        <td> 
-
-                            @can('update', $user)
-                                <a 
-                                    href="{{ route('admin.users.edit', $user) }}" 
-                                    class="btn btn-warning text-white btn-sm">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                            @endcan
-
-                            @can('delete', $user)
-                                <a 
-                                    href="{{ route('admin.users.get', $user) }}" 
-                                    class="btn btn-danger btn-sm"
-                                    onclick="getUserDelete(event)">
-                                    <i class="fas fa-trash-alt"></i>
-                                </a>   
-                            @endcan
-
-                            @can('view', $user)
-                                <a href="{{route('admin.users.show', $user)}}"
-                                    class="btn btn-dark btn-sm">
-                                    <i class="fas fa-eye"></i>
-                                </a>
-                            @endcan
-                            
-                        </td>
-                    </tr>
-                    @empty
-                        
-                    @endforelse
-                </tbody>
             </table>
         </div>
         <!-- /.card-body -->
@@ -109,6 +82,19 @@
                     "responsive": true, 
                     "autoWidth": false,
                     "processing": true,
+                    "serverSide": true,
+                    "ajax": "{{ route('admin.users.all') }}",
+                    "columns": [
+                        {data: 'id'},
+                        {data: 'name'},
+                        {data: 'last_name'},
+                        {data: 'email'},
+                        // {data: 'roles[, ].display_name', searchable: false, orderable: false},
+                        // {data: 'permissions[, ].display_name', searchable : false, orderable: false},
+                        {data: 'roles'},
+                        {data: 'permissions'},
+                        {data: 'btn'}
+                    ],
                     "language": {
                         "info": "_TOTAL_ registros",
                         "search": "Buscar",
@@ -123,7 +109,6 @@
                                     <option value="25">25</option>
                                     <option value="50">50</option>
                                     <option value="100">100</option>
-                                    <option value="-1">Todos</option>
                                 </select> 
                             registros
                         `,

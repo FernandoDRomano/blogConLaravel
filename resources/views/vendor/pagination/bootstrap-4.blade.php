@@ -1,6 +1,6 @@
 @if ($paginator->hasPages())
-    <div class="pagination">
-        <ul class="list-unstyled container-flex space-center" role="navigation">
+    <div class="pagination justify-content-end">
+        <ul class="list-unstyled d-flex space-center" role="navigation">
             {{-- Previous Page Link --}}
             @if ($paginator->onFirstPage())
                 <li class="page-item disabled" aria-disabled="true" aria-label="@lang('pagination.previous')">
@@ -23,7 +23,7 @@
                 @if (is_array($element))
                     @foreach ($element as $page => $url)
                         @if ($page == $paginator->currentPage())
-                            <li class="page-item active" aria-current="page"><a href="#" class="pagination-active">{{ $page }}</a></li>
+                            <li class="page-item active" aria-current="page"><a href="#" class="page-link active    ">{{ $page }}</a></li>
                         @else
                             <li class="page-item"><a class="page-link" href="{{ $url }}">{{ $page }}</a></li>
                         @endif
